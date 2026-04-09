@@ -6,7 +6,7 @@
   "ui": "dist/ui.html",
   "editorType": ["figma"],
   "networkAccess": {
-    "allowedDomains": ["https://cdnjs.cloudflare.com"],
-    "reasoning": "Loads jsPDF library for PDF export of weekly reports"
+    "allowedDomains": ["https://cdnjs.cloudflare.com", "https://fonts.googleapis.com", "https://fonts.gstatic.com"],
+    "reasoning": "Loads jsPDF library for PDF export and Material Symbols icon font"
   }
 }

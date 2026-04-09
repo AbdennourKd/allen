@@ -142,6 +142,51 @@ input, select, textarea {
   line-height: 1;
 }
 
+/* ---------- Material Symbols ---------- */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  vertical-align: middle;
+}
+
+.nav-tab-icon .material-symbols-outlined {
+  font-size: 18px;
+}
+
+.btn .material-symbols-outlined {
+  font-size: 16px;
+}
+
+.btn-icon .material-symbols-outlined {
+  font-size: 14px;
+}
+
+.empty-state-icon .material-symbols-outlined {
+  font-size: 32px;
+}
+
+.project-archive-btn .material-symbols-outlined {
+  font-size: 16px;
+}
+
+.idle-banner .material-symbols-outlined {
+  font-size: 16px;
+}
+
+.week-filter-badge .material-symbols-outlined {
+  font-size: 12px;
+}
+
 /* ---------- Form fields ---------- */
 .field {
   margin-bottom: 12px;

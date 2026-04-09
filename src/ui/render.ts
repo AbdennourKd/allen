@@ -134,10 +134,10 @@ function renderView(state: AppState, rs: RenderState): string {
 
 function renderNavTabs(view: ViewName): string {
   const tabs: Array<{ id: ViewName; icon: string; key: string }> = [
-    { id: 'timer', icon: '⏱', key: 'nav_timer' },
-    { id: 'report', icon: '📊', key: 'nav_report' },
-    { id: 'projects', icon: '📁', key: 'nav_projects' },
-    { id: 'settings', icon: '⚙', key: 'nav_settings' },
+    { id: 'timer', icon: '<span class="material-symbols-outlined">timer</span>', key: 'nav_timer' },
+    { id: 'report', icon: '<span class="material-symbols-outlined">bar_chart</span>', key: 'nav_report' },
+    { id: 'projects', icon: '<span class="material-symbols-outlined">folder</span>', key: 'nav_projects' },
+    { id: 'settings', icon: '<span class="material-symbols-outlined">settings</span>', key: 'nav_settings' },
   ];
   return `
     <nav class="nav-tabs">
@@ -224,16 +224,17 @@ function renderTimerView(state: AppState, rs: RenderState): string {
       active?.idlePaused
         ? `
       <div class="idle-banner">
+        <span class="material-symbols-outlined">pause_circle</span>
         <span class="idle-banner-text">${t('idle_banner')}</span>
-        <button id="btn-resume-idle" class="btn btn-sm btn-secondary">${t('btn_resume')}</button>
+        <button id="btn-resume-idle" class="btn btn-sm btn-secondary"><span class="material-symbols-outlined">play_arrow</span> ${t('btn_resume')}</button>
       </div>
     `
         : ''
     }
 
     <div class="buttons-row">
-      <button id="btn-start" class="btn btn-primary" ${canStart ? '' : 'disabled'}>${t('btn_start')}</button>
-      <button id="btn-stop" class="btn btn-danger" ${canStop ? '' : 'disabled'}>${t('btn_stop')}</button>
+      <button id="btn-start" class="btn btn-primary" ${canStart ? '' : 'disabled'}><span class="material-symbols-outlined">play_arrow</span> ${t('btn_start')}</button>
+      <button id="btn-stop" class="btn btn-danger" ${canStop ? '' : 'disabled'}><span class="material-symbols-outlined">stop</span> ${t('btn_stop')}</button>
     </div>
 
     ${renderTodayBreakdown(state)}
@@ -291,19 +292,19 @@ function renderReportView(state: AppState, rs: RenderState): string {
 
   return `
     <div class="report-nav">
-      <button id="btn-week-prev" class="btn-icon">◀</button>
+      <button id="btn-week-prev" class="btn-icon"><span class="material-symbols-outlined">chevron_left</span></button>
       <div class="week-label-block">
         <div class="week-label-text">${label}</div>
         ${
           filterLabel
             ? `<div class="week-filter-badge">
-                 <span>📁 ${escapeHtml(filterLabel)}</span>
-                 <button id="btn-clear-filter" class="week-filter-clear">✕</button>
+                 <span><span class="material-symbols-outlined">folder</span> ${escapeHtml(filterLabel)}</span>
+                 <button id="btn-clear-filter" class="week-filter-clear"><span class="material-symbols-outlined">close</span></button>
                </div>`
             : `<div class="week-filter-badge" style="color:var(--text-muted)">${t('all_projects')}</div>`
         }
       </div>
-      <button id="btn-week-next" class="btn-icon" ${isCurrentWeek ? 'disabled' : ''}>▶</button>
+      <button id="btn-week-next" class="btn-icon" ${isCurrentWeek ? 'disabled' : ''}><span class="material-symbols-outlined">chevron_right</span></button>
     </div>
 
     <div class="report-total">
@@ -314,7 +315,7 @@ function renderReportView(state: AppState, rs: RenderState): string {
     ${
       sessions.length === 0
         ? `<div class="empty-state">
-            <div class="empty-state-icon">📊</div>
+            <div class="empty-state-icon"><span class="material-symbols-outlined">bar_chart</span></div>
             <div class="empty-state-text">${t('week_empty')}</div>
           </div>`
         : `
@@ -322,8 +323,8 @@ function renderReportView(state: AppState, rs: RenderState): string {
       ${renderDayBreakdown(sessions)}
       ${renderSessionsList(sessions, state)}
       <div class="export-buttons">
-        <button id="btn-export-csv" class="btn btn-secondary">${t('export_csv')}</button>
-        <button id="btn-export-pdf" class="btn btn-secondary">${t('export_pdf')}</button>
+        <button id="btn-export-csv" class="btn btn-secondary"><span class="material-symbols-outlined">download</span> ${t('export_csv')}</button>
+        <button id="btn-export-pdf" class="btn btn-secondary"><span class="material-symbols-outlined">picture_as_pdf</span> ${t('export_pdf')}</button>
       </div>
     `
     }
@@ -427,7 +428,7 @@ function renderProjectsView(state: AppState, rs: RenderState): string {
     <div class="projects-header">
       <span class="projects-header-title">${t('projects_title')}</span>
       <button id="btn-toggle-new-project" class="btn btn-primary btn-sm">
-        ${rs.showNewProjectForm ? `✕ ${t('btn_cancel')}` : `+ ${t('btn_new')}`}
+        ${rs.showNewProjectForm ? `<span class="material-symbols-outlined">close</span> ${t('btn_cancel')}` : `<span class="material-symbols-outlined">add</span> ${t('btn_new')}`}
       </button>
     </div>
 
@@ -436,7 +437,7 @@ function renderProjectsView(state: AppState, rs: RenderState): string {
     ${
       active.length === 0 && archived.length === 0
         ? `<div class="empty-state">
-            <div class="empty-state-icon">📁</div>
+            <div class="empty-state-icon"><span class="material-symbols-outlined">folder_open</span></div>
             <div class="empty-state-text">${t('projects_empty').replace('\n', '<br>')}</div>
           </div>`
         : ''
@@ -472,7 +473,7 @@ function renderProjectItem(p: Project, state: AppState): string {
       ${isActive ? `<span class="active-badge">${t('active_badge')}</span>` : ''}
       <div class="project-time">${formatDuration(total)}</div>
       <button class="project-archive-btn" data-archive-id="${p.id}" title="${p.archived ? t('unarchive_title') : t('archive_title')}">
-        ${p.archived ? '↩' : '🗄'}
+        ${p.archived ? '<span class="material-symbols-outlined">unarchive</span>' : '<span class="material-symbols-outlined">archive</span>'}
       </button>
     </div>
   `;
