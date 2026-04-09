@@ -1,0 +1,12 @@
+{
+  "name": "Project Tracker",
+  "id": "ux-project-tracker",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "ui": "dist/ui.html",
+  "editorType": ["figma"],
+  "networkAccess": {
+    "allowedDomains": ["https://cdnjs.cloudflare.com"],
+    "reasoning": "Loads jsPDF library for PDF export of weekly reports"
+  }
+}

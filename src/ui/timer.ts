@@ -1,0 +1,102 @@
+// Timer engine — manages active session lifecycle.
+// Pure functions take state + callbacks to avoid circular imports with ui.ts.
+
+import { AppState, Phase, Session } from './types';
+import { saveState } from './storage';
+import { generateId } from './helpers';
+
+let tickInterval: number | null = null;
+
+export type TimerCallbacks = {
+  onTick: () => void;           // cheap DOM update only
+  onRender: () => void;          // full re-render
+  onShowNoteModal: (session: Session) => void;
+};
+
+export function startSession(
+  state: AppState,
+  projectId: string,
+  phase: Phase,
+  fileId: string,
+  fileName: string,
+  callbacks: TimerCallbacks
+): void {
+  // If a session is already running, silently finalize it without prompting for a note
+  if (state.activeSession) {
+    stopSession(state, false, callbacks);
+  }
+
+  state.activeSession = {
+    id: generateId(),
+    projectId,
+    phase,
+    startedAt: Date.now(),
+    endedAt: null,
+    duration: 0,
+    note: '',
+    fileId,
+    fileName,
+    idlePaused: false,
+  };
+  saveState(state);
+  startTick(state, callbacks.onTick);
+  callbacks.onRender();
+}
+
+export function startTick(state: AppState, onTick: () => void): void {
+  stopTick();
+  tickInterval = window.setInterval(() => {
+    if (!state.activeSession) return;
+    if (state.activeSession.idlePaused) return;
+    state.activeSession.duration = Math.floor(
+      (Date.now() - state.activeSession.startedAt) / 1000
+    );
+    saveState(state);
+    onTick();
+  }, 1000);
+}
+
+export function stopTick(): void {
+  if (tickInterval !== null) {
+    clearInterval(tickInterval);
+    tickInterval = null;
+  }
+}
+
+export function stopSession(
+  state: AppState,
+  askNote: boolean,
+  callbacks: TimerCallbacks
+): void {
+  if (!state.activeSession) return;
+  stopTick();
+
+  state.activeSession.endedAt = Date.now();
+  state.activeSession.duration = Math.floor(
+    (state.activeSession.endedAt - state.activeSession.startedAt) / 1000
+  );
+
+  if (askNote) {
+    // Pause in memory until note is submitted; do not push to sessions yet
+    callbacks.onShowNoteModal(state.activeSession);
+  } else {
+    finalizeSession(state, '', callbacks.onRender);
+  }
+}
+
+export function finalizeSession(
+  state: AppState,
+  note: string,
+  onRender: () => void
+): void {
+  if (!state.activeSession) return;
+  state.activeSession.note = note;
+  state.sessions.push({ ...state.activeSession });
+  state.activeSession = null;
+  saveState(state);
+  onRender();
+}
+
+export function hasActiveTick(): boolean {
+  return tickInterval !== null;
+}

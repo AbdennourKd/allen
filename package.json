@@ -1,0 +1,14 @@
+{
+  "name": "figma-project-tracker",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "node build.js",
+    "watch": "node build.js --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.101.1",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.7.2"
+  }
+}
