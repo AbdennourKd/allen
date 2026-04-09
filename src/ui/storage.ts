@@ -10,6 +10,7 @@ export function defaultState(): AppState {
     settings: {
       idleThreshold: 300,
       workDayHours: 8,
+      lang: 'fr',
     },
   };
 }
@@ -27,6 +28,7 @@ export function loadState(): AppState {
       settings: {
         idleThreshold: parsed.settings?.idleThreshold ?? 300,
         workDayHours: parsed.settings?.workDayHours ?? 8,
+        lang: parsed.settings?.lang ?? 'fr',
       },
     };
   } catch {

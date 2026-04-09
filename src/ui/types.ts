@@ -64,6 +64,7 @@ export type Project = {
 export type AppSettings = {
   idleThreshold: number;
   workDayHours: number;
+  lang: string;
 };
 
 export type AppState = {

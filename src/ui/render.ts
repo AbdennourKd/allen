@@ -24,6 +24,7 @@ import {
   groupByDay,
   groupByPhase,
 } from './helpers';
+import { getLang, getLocale, isRTL, Lang, LANGS, LANG_LABELS, t } from './i18n';
 
 export type RenderState = {
   view: ViewName;
@@ -60,6 +61,7 @@ export type Callbacks = {
   onProjectSelectChange: (projectId: string) => void;
   onToggleNewProjectForm: () => void;
   onNewProjectColorChange: (color: string) => void;
+  onLangChange: (lang: Lang) => void;
 };
 
 // ================================================================
@@ -101,12 +103,13 @@ export function updateTimerDisplay(state: AppState): void {
 // ================================================================
 
 function buildHTML(state: AppState, rs: RenderState): string {
+  const dir = isRTL() ? 'rtl' : 'ltr';
   return `
-    <div class="header">
-      <span class="header-title">Project Tracker</span>
-      ${state.activeSession ? `<span class="header-sub">● en cours</span>` : ''}
+    <div class="header" dir="${dir}">
+      <span class="header-title">${t('header_title')}</span>
+      ${state.activeSession ? `<span class="header-sub">${t('header_running')}</span>` : ''}
     </div>
-    <div class="content">
+    <div class="content" dir="${dir}">
       ${renderView(state, rs)}
     </div>
     ${renderNavTabs(rs.view)}
@@ -130,20 +133,20 @@ function renderView(state: AppState, rs: RenderState): string {
 }
 
 function renderNavTabs(view: ViewName): string {
-  const tabs: Array<{ id: ViewName; icon: string; label: string }> = [
-    { id: 'timer', icon: '⏱', label: 'Timer' },
-    { id: 'report', icon: '📊', label: 'Rapport' },
-    { id: 'projects', icon: '📁', label: 'Projets' },
-    { id: 'settings', icon: '⚙', label: 'Réglages' },
+  const tabs: Array<{ id: ViewName; icon: string; key: string }> = [
+    { id: 'timer', icon: '⏱', key: 'nav_timer' },
+    { id: 'report', icon: '📊', key: 'nav_report' },
+    { id: 'projects', icon: '📁', key: 'nav_projects' },
+    { id: 'settings', icon: '⚙', key: 'nav_settings' },
   ];
   return `
     <nav class="nav-tabs">
       ${tabs
         .map(
-          (t) => `
-        <button class="nav-tab ${view === t.id ? 'active' : ''}" data-view="${t.id}">
-          <span class="nav-tab-icon">${t.icon}</span>
-          <span>${t.label}</span>
+          (tab) => `
+        <button class="nav-tab ${view === tab.id ? 'active' : ''}" data-view="${tab.id}">
+          <span class="nav-tab-icon">${tab.icon}</span>
+          <span>${t(tab.key)}</span>
         </button>
       `
         )
@@ -177,14 +180,14 @@ function renderTimerView(state: AppState, rs: RenderState): string {
   return `
     <div class="selects-row">
       <div class="field">
-        <label class="field-label">Projet</label>
+        <label class="field-label">${t('label_project')}</label>
         <select id="project-select" class="select" ${active ? 'disabled' : ''}>
           ${
             activeProjects.length === 0
-              ? `<option value="">Créer un projet d'abord</option>`
+              ? `<option value="">${t('empty_project')}</option>`
               : `${
                   !selectedProjectId
-                    ? `<option value="">— Choisir —</option>`
+                    ? `<option value="">${t('choose_project')}</option>`
                     : ''
                 }${activeProjects
                   .map(
@@ -198,7 +201,7 @@ function renderTimerView(state: AppState, rs: RenderState): string {
         </select>
       </div>
       <div class="field">
-        <label class="field-label">Phase</label>
+        <label class="field-label">${t('label_phase')}</label>
         <select id="phase-select" class="select" ${active ? 'disabled' : ''}>
           ${PHASES.map(
             (ph) => `
@@ -221,16 +224,16 @@ function renderTimerView(state: AppState, rs: RenderState): string {
       active?.idlePaused
         ? `
       <div class="idle-banner">
-        <span class="idle-banner-text">⏸ Idle détecté — session en pause</span>
-        <button id="btn-resume-idle" class="btn btn-sm btn-secondary">Reprendre</button>
+        <span class="idle-banner-text">${t('idle_banner')}</span>
+        <button id="btn-resume-idle" class="btn btn-sm btn-secondary">${t('btn_resume')}</button>
       </div>
     `
         : ''
     }
 
     <div class="buttons-row">
-      <button id="btn-start" class="btn btn-primary" ${canStart ? '' : 'disabled'}>▶ Start</button>
-      <button id="btn-stop" class="btn btn-danger" ${canStop ? '' : 'disabled'}>■ Stop</button>
+      <button id="btn-start" class="btn btn-primary" ${canStart ? '' : 'disabled'}>${t('btn_start')}</button>
+      <button id="btn-stop" class="btn btn-danger" ${canStop ? '' : 'disabled'}>${t('btn_stop')}</button>
     </div>
 
     ${renderTodayBreakdown(state)}
@@ -241,15 +244,15 @@ function renderTodayBreakdown(state: AppState): string {
   const breakdown = getTodayPhaseBreakdown(state);
   if (breakdown.length === 0) {
     return `
-      <div class="section-title">Aujourd'hui</div>
+      <div class="section-title">${t('today')}</div>
       <div class="empty-state">
-        <div class="empty-state-text">Aucune session aujourd'hui.<br>Appuie sur ▶ Start pour commencer.</div>
+        <div class="empty-state-text">${t('today_empty').replace('\n', '<br>')}</div>
       </div>
     `;
   }
   const total = breakdown.reduce((a, b) => a + b.duration, 0);
   return `
-    <div class="section-title">Aujourd'hui</div>
+    <div class="section-title">${t('today')}</div>
     ${breakdown
       .map(
         (b) => `
@@ -265,7 +268,7 @@ function renderTodayBreakdown(state: AppState): string {
       )
       .join('')}
     <div class="today-total">
-      <span>Total</span>
+      <span>${t('total')}</span>
       <span class="today-total-value">${formatDuration(total)}</span>
     </div>
   `;
@@ -297,14 +300,14 @@ function renderReportView(state: AppState, rs: RenderState): string {
                  <span>📁 ${escapeHtml(filterLabel)}</span>
                  <button id="btn-clear-filter" class="week-filter-clear">✕</button>
                </div>`
-            : `<div class="week-filter-badge" style="color:var(--text-muted)">Tous les projets</div>`
+            : `<div class="week-filter-badge" style="color:var(--text-muted)">${t('all_projects')}</div>`
         }
       </div>
       <button id="btn-week-next" class="btn-icon" ${isCurrentWeek ? 'disabled' : ''}>▶</button>
     </div>
 
     <div class="report-total">
-      <span class="report-total-label">Total semaine</span>
+      <span class="report-total-label">${t('week_total')}</span>
       <span class="report-total-value">${formatDuration(total)}</span>
     </div>
 
@@ -312,15 +315,15 @@ function renderReportView(state: AppState, rs: RenderState): string {
       sessions.length === 0
         ? `<div class="empty-state">
             <div class="empty-state-icon">📊</div>
-            <div class="empty-state-text">Pas de sessions cette semaine.</div>
+            <div class="empty-state-text">${t('week_empty')}</div>
           </div>`
         : `
       ${renderPhaseBreakdown(sessions)}
       ${renderDayBreakdown(sessions)}
       ${renderSessionsList(sessions, state)}
       <div class="export-buttons">
-        <button id="btn-export-csv" class="btn btn-secondary">Export CSV</button>
-        <button id="btn-export-pdf" class="btn btn-secondary">Export PDF</button>
+        <button id="btn-export-csv" class="btn btn-secondary">${t('export_csv')}</button>
+        <button id="btn-export-pdf" class="btn btn-secondary">${t('export_pdf')}</button>
       </div>
     `
     }
@@ -333,7 +336,7 @@ function renderPhaseBreakdown(sessions: Session[]): string {
   const total = grouped.reduce((a, b) => a + b.duration, 0);
   const max = Math.max(...grouped.map((g) => g.duration));
   return `
-    <div class="section-title">Par phase</div>
+    <div class="section-title">${t('by_phase')}</div>
     ${grouped
       .map((g) => {
         const pctOfMax = (g.duration / max) * 100;
@@ -358,7 +361,7 @@ function renderDayBreakdown(sessions: Session[]): string {
   if (grouped.length === 0) return '';
   const max = Math.max(...grouped.map((g) => g.duration));
   return `
-    <div class="section-title">Par jour</div>
+    <div class="section-title">${t('by_day')}</div>
     ${grouped
       .map((g) => {
         const pct = (g.duration / max) * 100;
@@ -379,16 +382,17 @@ function renderDayBreakdown(sessions: Session[]): string {
 function renderSessionsList(sessions: Session[], state: AppState): string {
   const sorted = [...sessions].sort((a, b) => b.startedAt - a.startedAt);
   return `
-    <div class="section-title">Sessions (${sessions.length})</div>
+    <div class="section-title">${t('sessions_count')} (${sessions.length})</div>
     <div class="sessions-list">
       ${sorted
         .map((s) => {
           const date = new Date(s.startedAt);
-          const dayLabel = date.toLocaleDateString('fr-FR', {
+          const locale = getLocale();
+          const dayLabel = date.toLocaleDateString(locale, {
             weekday: 'short',
             day: 'numeric',
           });
-          const timeLabel = date.toLocaleTimeString('fr-FR', {
+          const timeLabel = date.toLocaleTimeString(locale, {
             hour: '2-digit',
             minute: '2-digit',
           });
@@ -421,9 +425,9 @@ function renderProjectsView(state: AppState, rs: RenderState): string {
 
   return `
     <div class="projects-header">
-      <span class="projects-header-title">Projets</span>
+      <span class="projects-header-title">${t('projects_title')}</span>
       <button id="btn-toggle-new-project" class="btn btn-primary btn-sm">
-        ${rs.showNewProjectForm ? '✕ Annuler' : '+ Nouveau'}
+        ${rs.showNewProjectForm ? `✕ ${t('btn_cancel')}` : `+ ${t('btn_new')}`}
       </button>
     </div>
 
@@ -433,7 +437,7 @@ function renderProjectsView(state: AppState, rs: RenderState): string {
       active.length === 0 && archived.length === 0
         ? `<div class="empty-state">
             <div class="empty-state-icon">📁</div>
-            <div class="empty-state-text">Aucun projet.<br>Crée ton premier projet pour commencer.</div>
+            <div class="empty-state-text">${t('projects_empty').replace('\n', '<br>')}</div>
           </div>`
         : ''
     }
@@ -443,7 +447,7 @@ function renderProjectsView(state: AppState, rs: RenderState): string {
     ${
       archived.length > 0
         ? `
-      <div class="section-title">Archivés</div>
+      <div class="section-title">${t('archived')}</div>
       ${archived.map((p) => renderProjectItem(p, state)).join('')}
     `
         : ''
@@ -461,13 +465,13 @@ function renderProjectItem(p: Project, state: AppState): string {
         <div class="project-name">${escapeHtml(p.name)}</div>
         <div class="project-meta">${
           state.sessions.filter((s) => s.projectId === p.id).length
-        } session${
-    state.sessions.filter((s) => s.projectId === p.id).length > 1 ? 's' : ''
+        } ${
+    state.sessions.filter((s) => s.projectId === p.id).length > 1 ? t('session_plural') : t('session_singular')
   }</div>
       </div>
-      ${isActive ? '<span class="active-badge">Actif</span>' : ''}
+      ${isActive ? `<span class="active-badge">${t('active_badge')}</span>` : ''}
       <div class="project-time">${formatDuration(total)}</div>
-      <button class="project-archive-btn" data-archive-id="${p.id}" title="${p.archived ? 'Désarchiver' : 'Archiver'}">
+      <button class="project-archive-btn" data-archive-id="${p.id}" title="${p.archived ? t('unarchive_title') : t('archive_title')}">
         ${p.archived ? '↩' : '🗄'}
       </button>
     </div>
@@ -477,15 +481,15 @@ function renderProjectItem(p: Project, state: AppState): string {
 function renderNewProjectForm(selectedColor: string): string {
   return `
     <div class="new-project-form">
-      <div class="new-project-form-title">Nouveau projet</div>
+      <div class="new-project-form-title">${t('new_project')}</div>
       <input
         id="new-project-name"
         class="input"
         type="text"
-        placeholder="Nom du projet"
+        placeholder="${t('project_name_placeholder')}"
         maxlength="60"
       />
-      <div class="field-label" style="margin-top:12px;margin-bottom:6px">Couleur</div>
+      <div class="field-label" style="margin-top:12px;margin-bottom:6px">${t('label_color')}</div>
       <div class="color-palette">
         ${PROJECT_PALETTE.map(
           (c) => `
@@ -498,7 +502,7 @@ function renderNewProjectForm(selectedColor: string): string {
         ).join('')}
       </div>
       <div class="form-actions">
-        <button id="btn-create-project" class="btn btn-primary btn-sm">Créer</button>
+        <button id="btn-create-project" class="btn btn-primary btn-sm">${t('btn_create')}</button>
       </div>
     </div>
   `;
@@ -521,10 +525,21 @@ function renderSettingsView(state: AppState, rs: RenderState): string {
 
   const hoursOptions = [6, 7, 8, 9, 10];
 
+  const currentLang = getLang();
+
   return `
     <div class="settings-section">
       <div class="field">
-        <label class="field-label">Idle timeout</label>
+        <label class="field-label">${t('label_language')}</label>
+        <select id="lang-select" class="select">
+          ${LANGS.map(
+            (l) =>
+              `<option value="${l}" ${l === currentLang ? 'selected' : ''}>${LANG_LABELS[l]}</option>`
+          ).join('')}
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">${t('idle_timeout')}</label>
         <select id="idle-select" class="select">
           ${idleOptions
             .map(
@@ -535,7 +550,7 @@ function renderSettingsView(state: AppState, rs: RenderState): string {
         </select>
       </div>
       <div class="field">
-        <label class="field-label">Journée type</label>
+        <label class="field-label">${t('work_day')}</label>
         <select id="workday-select" class="select">
           ${hoursOptions
             .map(
@@ -547,27 +562,27 @@ function renderSettingsView(state: AppState, rs: RenderState): string {
       </div>
     </div>
 
-    <div class="section-title">À propos</div>
+    <div class="section-title">${t('about')}</div>
     <div class="empty-state" style="text-align:left;padding:12px;font-size:11px">
-      <div><strong>${state.projects.length}</strong> projets</div>
-      <div><strong>${state.sessions.length}</strong> sessions enregistrées</div>
+      <div><strong>${state.projects.length}</strong> ${t('projects_count')}</div>
+      <div><strong>${state.sessions.length}</strong> ${t('sessions_recorded')}</div>
     </div>
 
     <div class="danger-zone">
-      <div class="section-title" style="color:var(--danger);margin-top:0">Zone dangereuse</div>
+      <div class="section-title" style="color:var(--danger);margin-top:0">${t('danger_zone')}</div>
       ${
         rs.confirmingClear
           ? `
         <div class="confirm-text">
-          Cette action effacera tous les projets, sessions et réglages. Impossible à annuler.
+          ${t('danger_confirm')}
         </div>
         <div class="danger-buttons">
-          <button id="btn-cancel-clear" class="btn btn-ghost btn-sm">Annuler</button>
-          <button id="btn-confirm-clear-real" class="btn btn-danger btn-sm">Oui, tout effacer</button>
+          <button id="btn-cancel-clear" class="btn btn-ghost btn-sm">${t('btn_cancel_clear')}</button>
+          <button id="btn-confirm-clear-real" class="btn btn-danger btn-sm">${t('btn_confirm_clear')}</button>
         </div>
       `
           : `
-        <button id="btn-clear-data" class="btn btn-danger-outline btn-sm">Effacer toutes les données</button>
+        <button id="btn-clear-data" class="btn btn-danger-outline btn-sm">${t('btn_clear_data')}</button>
       `
       }
     </div>
@@ -582,17 +597,17 @@ function renderNoteModal(): string {
   return `
     <div class="modal-overlay">
       <div class="modal-card">
-        <div class="modal-title">Note de session</div>
-        <div class="modal-sub">Optionnel — décris brièvement ce que tu as fait.</div>
+        <div class="modal-title">${t('note_title')}</div>
+        <div class="modal-sub">${t('note_sub')}</div>
         <textarea
           id="session-note-input"
           class="textarea"
-          placeholder="Ex: Refonte du dashboard composants..."
+          placeholder="${t('note_placeholder')}"
           autofocus
         ></textarea>
         <div class="modal-actions">
-          <button id="btn-skip-note" class="btn btn-ghost btn-sm">Ignorer</button>
-          <button id="btn-save-note" class="btn btn-primary btn-sm">Enregistrer</button>
+          <button id="btn-skip-note" class="btn btn-ghost btn-sm">${t('btn_skip')}</button>
+          <button id="btn-save-note" class="btn btn-primary btn-sm">${t('btn_save')}</button>
         </div>
       </div>
     </div>
@@ -739,14 +754,22 @@ function attachSettingsListeners(
   state: AppState,
   cb: Callbacks
 ): void {
+  const langSelect = app.querySelector<HTMLSelectElement>('#lang-select');
   const idleSelect = app.querySelector<HTMLSelectElement>('#idle-select');
   const workdaySelect = app.querySelector<HTMLSelectElement>('#workday-select');
+
+  if (langSelect) {
+    langSelect.addEventListener('change', () => {
+      cb.onLangChange(langSelect.value as Lang);
+    });
+  }
 
   const saveIfChanged = () => {
     if (!idleSelect || !workdaySelect) return;
     cb.onSaveSettings({
       idleThreshold: parseInt(idleSelect.value, 10),
       workDayHours: parseInt(workdaySelect.value, 10),
+      lang: getLang(),
     });
   };
 

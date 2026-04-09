@@ -37,6 +37,7 @@ import {
   getWeekLabel,
   getWeekSessions,
 } from './helpers';
+import { Lang, setLang } from './i18n';
 
 // ================================================================
 // MUTABLE STATE
@@ -287,6 +288,13 @@ const callbacks: Callbacks = {
   onNewProjectColorChange(color: string) {
     newProjectColor = color;
   },
+
+  onLangChange(lang: Lang) {
+    setLang(lang);
+    state.settings.lang = lang;
+    saveState(state);
+    doRender();
+  },
 };
 
 // ================================================================
@@ -294,6 +302,9 @@ const callbacks: Callbacks = {
 // ================================================================
 
 function init() {
+  // Restore saved language
+  setLang((state.settings.lang || 'fr') as Lang);
+
   // Attach idle listeners immediately
   initIdleListeners(state, idleCallbacks);
 

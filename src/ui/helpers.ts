@@ -1,6 +1,7 @@
 // Pure utility functions — no side effects, no DOM.
 
 import { AppState, Phase, Session } from './types';
+import { getDayShort, getMonthName, t } from './i18n';
 
 export function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
@@ -60,25 +61,10 @@ export function getWeekNumber(date: Date): number {
   return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
 }
 
-const MONTHS_FR = [
-  'Janvier',
-  'Février',
-  'Mars',
-  'Avril',
-  'Mai',
-  'Juin',
-  'Juillet',
-  'Août',
-  'Septembre',
-  'Octobre',
-  'Novembre',
-  'Décembre',
-];
-
 export function getWeekLabel(weekOffset: number): string {
   const monday = startOfWeek(new Date(), weekOffset);
   const weekNum = getWeekNumber(monday);
-  return `Semaine ${weekNum} · ${MONTHS_FR[monday.getMonth()]}`;
+  return `${t('week_label')} ${weekNum} · ${getMonthName(monday.getMonth())}`;
 }
 
 export function getWeekSessions(
@@ -117,7 +103,7 @@ export function groupByDay(
     const key = new Date(s.startedAt).toISOString().slice(0, 10);
     map.set(key, (map.get(key) ?? 0) + s.duration);
   }
-  const DAY_LABELS = ['Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa', 'Di'];
+  const DAY_LABELS = [0,1,2,3,4,5,6].map(i => getDayShort(i));
   // Return Mon–Sun in order for the current reference week
   const result: Array<{ day: string; label: string; duration: number }> = [];
   for (const [day, duration] of map.entries()) {
@@ -164,7 +150,7 @@ export function getTodayPhaseBreakdown(
 }
 
 export function getProjectName(state: AppState, projectId: string): string {
-  return state.projects.find((p) => p.id === projectId)?.name ?? 'Projet inconnu';
+  return state.projects.find((p) => p.id === projectId)?.name ?? t('unknown_project');
 }
 
 export function getProjectTotalTime(state: AppState, projectId: string): number {
