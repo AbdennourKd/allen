@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Tracker — Track your design time</title>
+  <meta name="description" content="UX/UI time tracking for designers. Track by project, by phase, automatically. Figma plugin & Chrome extension." />
+  <meta property="og:title" content="Project Tracker — Track your design time" />
+  <meta property="og:description" content="UX/UI time tracking for designers. By project. By phase. Automatically." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='none' stroke='%230d99ff' stroke-width='6'/><line x1='50' y1='50' x2='50' y2='22' stroke='%230d99ff' stroke-width='5' stroke-linecap='round'/><line x1='50' y1='50' x2='70' y2='58' stroke='%230d99ff' stroke-width='4' stroke-linecap='round'/><circle cx='50' cy='50' r='4' fill='%230d99ff'/></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0a0a;
+      --bg-2: #111;
+      --surface: rgba(255,255,255,0.04);
+      --surface-hover: rgba(255,255,255,0.07);
+      --border: rgba(255,255,255,0.08);
+      --text: #e8e8e8;
+      --text-2: #999;
+      --text-3: #666;
+      --accent: #0d99ff;
+      --accent-2: #7b61ff;
+      --accent-glow: rgba(13,153,255,0.15);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ---- LAYOUT ---- */
+    .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+    /* ---- ANIMATED GRADIENT BG ---- */
+    .hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+
+    .hero-gradient {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 40%, rgba(13,153,255,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 50% at 80% 30%, rgba(123,97,255,0.10) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 50% 80%, rgba(13,153,255,0.06) 0%, transparent 70%);
+      animation: gradientShift 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes gradientShift {
+      0% { transform: scale(1) translate(0, 0); opacity: 1; }
+      50% { transform: scale(1.1) translate(-2%, 3%); opacity: 0.8; }
+      100% { transform: scale(1.05) translate(2%, -2%); opacity: 1; }
+    }
+
+    .hero-grain {
+      position: absolute; inset: 0; z-index: 1; opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 128px 128px;
+    }
+
+    .hero-content { position: relative; z-index: 2; text-align: center; padding: 80px 24px; max-width: 680px; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 99px;
+      background: var(--surface); border: 1px solid var(--border);
+      font-size: 12px; font-weight: 600; color: var(--accent);
+      letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 28px;
+    }
+    .hero-badge-dot {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    h1 {
+      font-size: clamp(40px, 7vw, 72px); font-weight: 800;
+      line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 20px;
+    }
+    h1 .gradient-text {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(16px, 2.2vw, 20px); color: var(--text-2);
+      max-width: 520px; margin: 0 auto 36px; line-height: 1.6;
+    }
+
+    /* ---- WAITLIST FORM ---- */
+    .waitlist-form {
+      display: flex; gap: 10px; max-width: 440px; margin: 0 auto 14px;
+    }
+    .waitlist-input {
+      flex: 1; padding: 14px 18px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--surface);
+      color: var(--text); font-size: 15px; font-family: var(--font);
+      outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .waitlist-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .waitlist-input::placeholder { color: var(--text-3); }
+
+    .btn-primary {
+      padding: 14px 28px; border: none; border-radius: var(--radius-sm);
+      background: var(--accent); color: #fff; font-size: 15px;
+      font-weight: 600; font-family: var(--font); cursor: pointer;
+      white-space: nowrap; transition: transform 0.15s, box-shadow 0.2s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary.success {
+      background: #1db954; pointer-events: none;
+    }
+
+    .hero-fine { font-size: 13px; color: var(--text-3); }
+
+    /* ---- SECTION COMMON ---- */
+    section { padding: 100px 0; }
+    .section-label {
+      text-align: center; font-size: 12px; font-weight: 600;
+      color: var(--accent); text-transform: uppercase;
+      letter-spacing: 1.5px; margin-bottom: 12px;
+    }
+    .section-title {
+      text-align: center; font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800; letter-spacing: -0.02em; margin-bottom: 52px;
+    }
+
+    /* ---- FADE IN ---- */
+    .fade-in {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ---- FEATURES GRID ---- */
+    .features-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+    }
+    .feature-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 32px 28px;
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      transition: border-color 0.3s, transform 0.2s;
+    }
+    .feature-card:hover {
+      border-color: rgba(255,255,255,0.12);
+      transform: translateY(-2px);
+    }
+    .feature-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: 18px;
+      background: var(--accent-glow);
+    }
+    .feature-card h3 {
+      font-size: 17px; font-weight: 700; margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+    .feature-card p { font-size: 14px; color: var(--text-2); line-height: 1.6; }
+
+    /* ---- HOW IT WORKS ---- */
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; text-align: center; }
+    .step-number {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 800; margin: 0 auto 16px;
+    }
+    .step h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .step p { font-size: 14px; color: var(--text-2); max-width: 240px; margin: 0 auto; }
+
+    .steps-connector {
+      display: none; /* shown on desktop via grid */
+    }
+
+    /* ---- PLATFORMS ---- */
+    .platforms { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 560px; margin: 0 auto; }
+    .platform-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 36px 28px; text-align: center;
+      position: relative; overflow: hidden;
+      transition: border-color 0.3s;
+    }
+    .platform-card:hover { border-color: rgba(255,255,255,0.12); }
+    .platform-icon {
+      font-size: 40px; margin-bottom: 14px; display: block;
+    }
+    .platform-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+    .platform-card p { font-size: 13px; color: var(--text-2); }
+    .badge-soon {
+      position: absolute; top: 16px; right: 16px;
+      padding: 4px 10px; border-radius: 99px; font-size: 11px;
+      font-weight: 600; background: rgba(123,97,255,0.15);
+      color: var(--accent-2); border: 1px solid rgba(123,97,255,0.2);
+    }
+
+    /* ---- FOOTER ---- */
+    .footer {
+      border-top: 1px solid var(--border); padding: 60px 0 40px;
+      text-align: center;
+    }
+    .footer-tagline {
+      font-size: 22px; font-weight: 700; margin-bottom: 28px;
+      letter-spacing: -0.01em;
+    }
+    .footer-links {
+      display: flex; justify-content: center; gap: 24px;
+      margin-top: 32px; margin-bottom: 20px;
+    }
+    .footer-links a {
+      color: var(--text-3); text-decoration: none; font-size: 13px;
+      font-weight: 500; transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--text); }
+    .footer-copy { font-size: 12px; color: var(--text-3); }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 768px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; gap: 32px; }
+      .platforms { grid-template-columns: 1fr; max-width: 320px; }
+      .waitlist-form { flex-direction: column; }
+      .btn-primary { width: 100%; }
+      section { padding: 72px 0; }
+      .hero-content { padding: 60px 16px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-content { padding: 48px 12px; }
+      .feature-card { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-gradient"></div>
+    <div class="hero-grain"></div>
+    <div class="hero-content">
+      <div class="hero-badge"><span class="hero-badge-dot"></span> Beta coming soon</div>
+      <h1>Track your <span class="gradient-text">design time.</span></h1>
+      <p class="hero-sub">
+        Project Tracker helps UX/UI designers understand where their time goes.
+        By project. By phase. Automatically.
+      </p>
+      <form class="waitlist-form" id="waitlist-hero" aria-label="Join the waitlist">
+        <input class="waitlist-input" type="email" placeholder="you@design.studio" required aria-label="Email address" />
+        <button class="btn-primary" type="submit">Join the waitlist</button>
+      </form>
+      <p class="hero-fine">Free during beta. No credit card required.</p>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="container">
+      <p class="section-label fade-in">Features</p>
+      <h2 class="section-title fade-in">Everything you need,<br>nothing you don't.</h2>
+      <div class="features-grid">
+        <div class="feature-card fade-in">
+          <div class="feature-icon">&#127912;</div>
+          <h3>Phase Tracking</h3>
+          <p>Research, Wireframe, Design, Handoff &mdash; see exactly where your time goes across every stage.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">&#9208;</div>
+          <h3>Smart Idle</h3>
+          <p>Step away? Timer pauses automatically. Come back and pick up right where you left off. No lost data.</p>
+        </div>
+        <div class="feature-card fade-in">
+          <div class="feature-icon">&#128202;</div>
+          <h3>Weekly Reports</h3>
+          <p>Visual breakdowns by phase and day. Export your week as CSV or PDF in one click.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="container">
+      <p class="section-label fade-in">How it works</p>
+      <h2 class="section-title fade-in">Three steps. That's it.</h2>
+      <div class="steps">
+        <div class="step fade-in">
+          <div class="step-number">1</div>
+          <h3>Pick a project &amp; phase</h3>
+          <p>Select what you're working on. Research, Wireframe, Design &mdash; you choose.</p>
+        </div>
+        <div class="step fade-in">
+          <div class="step-number">2</div>
+          <h3>Hit Start</h3>
+          <p>We handle the rest. Timer runs, idle detection kicks in, time is tracked.</p>
+        </div>
+        <div class="step fade-in">
+          <div class="step-number">3</div>
+          <h3>Review &amp; export</h3>
+          <p>Check your weekly report. See patterns. Export to CSV or PDF for your team.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AVAILABLE ON -->
+  <section id="platforms">
+    <div class="container">
+      <p class="section-label fade-in">Available on</p>
+      <h2 class="section-title fade-in">Where you already work.</h2>
+      <div class="platforms">
+        <div class="platform-card fade-in">
+          <span class="badge-soon">Coming soon</span>
+          <span class="platform-icon">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M20 4C11.16 4 4 11.16 4 20s7.16 16 16 16 16-7.16 16-16S28.84 4 20 4zm7.6 12.4L22.12 28.16c-.32.64-1.2.64-1.52 0L18 23.2l-4.96 2.6c-.64.32-1.36-.32-1.04-.96l4.48-11.76c.24-.56.96-.64 1.28-.16L20 16l2.24-3.08c.32-.48 1.04-.4 1.28.16l4.48 11.76c.08.16.08.36-.4.56z" fill="#0d99ff"/></svg>
+          </span>
+          <h3>Figma Plugin</h3>
+          <p>Track time without leaving your canvas.</p>
+        </div>
+        <div class="platform-card fade-in">
+          <span class="badge-soon">Coming soon</span>
+          <span class="platform-icon">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="16" fill="none" stroke="#0d99ff" stroke-width="2"/><circle cx="20" cy="20" r="8" fill="#0d99ff" opacity="0.3"/><circle cx="20" cy="14" r="4" fill="#0d99ff"/><circle cx="14.8" cy="23" r="4" fill="#34a853"/><circle cx="25.2" cy="23" r="4" fill="#fbbc05"/></svg>
+          </span>
+          <h3>Chrome Extension</h3>
+          <p>Track time across any browser tab.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-tagline fade-in">Built for designers who<br>care about their craft.</p>
+      <form class="waitlist-form fade-in" id="waitlist-footer" aria-label="Join the waitlist">
+        <input class="waitlist-input" type="email" placeholder="you@design.studio" required aria-label="Email address" />
+        <button class="btn-primary" type="submit">Join the waitlist</button>
+      </form>
+      <div class="footer-links">
+        <a href="https://github.com/AbdennourKd/project-tracker" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://x.com" target="_blank" rel="noopener">Twitter / X</a>
+      </div>
+      <p class="footer-copy">&copy; 2026 Project Tracker. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Intersection Observer — fade in
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-in').forEach((el) => observer.observe(el));
+
+    // Waitlist form handler
+    document.querySelectorAll('.waitlist-form').forEach((form) => {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const btn = form.querySelector('.btn-primary');
+        const input = form.querySelector('.waitlist-input');
+        if (btn && input) {
+          btn.textContent = "You're on the list!";
+          btn.classList.add('success');
+          input.disabled = true;
+          input.value = '';
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
