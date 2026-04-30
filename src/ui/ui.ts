@@ -334,8 +334,9 @@ function init() {
       stopTick();
     } else if (state.activeSession && !state.activeSession.idlePaused) {
       // Recompute and repaint immediately, then restart the per-second tick.
-      state.activeSession.duration = Math.floor(
-        (Date.now() - state.activeSession.startedAt) / 1000
+      state.activeSession.duration = Math.max(
+        0,
+        Math.floor((Date.now() - state.activeSession.startedAt) / 1000)
       );
       onTick();
       startTick(state, onTick);

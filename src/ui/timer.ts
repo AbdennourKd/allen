@@ -53,8 +53,10 @@ export function startTick(state: AppState, onTick: () => void): void {
   tickInterval = window.setInterval(() => {
     if (!state.activeSession) return;
     if (state.activeSession.idlePaused) return;
-    state.activeSession.duration = Math.floor(
-      (Date.now() - state.activeSession.startedAt) / 1000
+    // Math.max guards against system clock going backwards mid-session.
+    state.activeSession.duration = Math.max(
+      0,
+      Math.floor((Date.now() - state.activeSession.startedAt) / 1000)
     );
     ticksSinceSave += 1;
     if (ticksSinceSave >= 30) {
@@ -81,8 +83,11 @@ export function stopSession(
   stopTick();
 
   state.activeSession.endedAt = Date.now();
-  state.activeSession.duration = Math.floor(
-    (state.activeSession.endedAt - state.activeSession.startedAt) / 1000
+  state.activeSession.duration = Math.max(
+    0,
+    Math.floor(
+      (state.activeSession.endedAt - state.activeSession.startedAt) / 1000
+    )
   );
 
   if (askNote) {
