@@ -380,7 +380,9 @@ function renderDayBreakdown(sessions: Session[]): string {
 }
 
 function renderSessionsList(sessions: Session[], state: AppState): string {
-  const sorted = [...sessions].sort((a, b) => b.startedAt - a.startedAt);
+  // sessions came from getWeekSessions which returns a fresh filter() array,
+  // so we can sort it in place — no need to copy.
+  const sorted = sessions.sort((a, b) => b.startedAt - a.startedAt);
   return `
     <div class="section-title">${t('sessions_count')} (${sessions.length})</div>
     <div class="sessions-list">

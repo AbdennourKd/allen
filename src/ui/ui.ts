@@ -326,6 +326,22 @@ function init() {
     }
   }
 
+  // Pause the tick when the document is hidden (e.g. user switched to another
+  // tab or another Figma file). Duration is recomputed from startedAt on
+  // resume, so the timer jumps to the correct value with no drift.
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      stopTick();
+    } else if (state.activeSession && !state.activeSession.idlePaused) {
+      // Recompute and repaint immediately, then restart the per-second tick.
+      state.activeSession.duration = Math.floor(
+        (Date.now() - state.activeSession.startedAt) / 1000
+      );
+      onTick();
+      startTick(state, onTick);
+    }
+  });
+
   // Listen for INIT from Figma sandbox — updates file metadata on active session
   window.onmessage = (event: MessageEvent) => {
     const msg = event.data?.pluginMessage;
