@@ -84,8 +84,16 @@ function getCurrentRenderState(): RenderState {
   };
 }
 
+// Coalesce multiple doRender() calls in the same frame into a single
+// innerHTML rebuild. Several callbacks (e.g. resume-from-idle) chain into
+// 2–3 renders synchronously; without this they all run.
+let renderRAF: number | null = null;
 function doRender(): void {
-  render(state, getCurrentRenderState(), callbacks);
+  if (renderRAF !== null) return;
+  renderRAF = requestAnimationFrame(() => {
+    renderRAF = null;
+    render(state, getCurrentRenderState(), callbacks);
+  });
 }
 
 function onTick(): void {
@@ -305,8 +313,9 @@ function init() {
   // Restore saved language
   setLang((state.settings.lang || 'fr') as Lang);
 
-  // Attach idle listeners immediately
-  initIdleListeners(state, idleCallbacks);
+  // Attach idle listeners immediately. Pass a getter so listeners always
+  // see the current `state` reference (it is rebound on Clear Data).
+  initIdleListeners(() => state, idleCallbacks);
 
   // Resume tick independently of INIT message — works both in Figma
   // (where INIT arrives instantly) and in isolated preview contexts.

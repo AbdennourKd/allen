@@ -17,7 +17,6 @@ import {
   formatDuration,
   formatTime,
   getProjectName,
-  getProjectTotalTime,
   getTodayPhaseBreakdown,
   getWeekLabel,
   getWeekSessions,
@@ -420,9 +419,27 @@ function renderSessionsList(sessions: Session[], state: AppState): string {
 // Projects View
 // ----------------------------------------------------------------
 
+type ProjectStat = { count: number; total: number };
+
+function buildProjectStats(state: AppState): Map<string, ProjectStat> {
+  // Single pass over sessions instead of 3 filter()s per project per render.
+  const map = new Map<string, ProjectStat>();
+  for (const s of state.sessions) {
+    const cur = map.get(s.projectId);
+    if (cur) {
+      cur.count += 1;
+      cur.total += s.duration;
+    } else {
+      map.set(s.projectId, { count: 1, total: s.duration });
+    }
+  }
+  return map;
+}
+
 function renderProjectsView(state: AppState, rs: RenderState): string {
   const active = state.projects.filter((p) => !p.archived);
   const archived = state.projects.filter((p) => p.archived);
+  const stats = buildProjectStats(state);
 
   return `
     <div class="projects-header">
@@ -443,35 +460,36 @@ function renderProjectsView(state: AppState, rs: RenderState): string {
         : ''
     }
 
-    ${active.map((p) => renderProjectItem(p, state)).join('')}
+    ${active.map((p) => renderProjectItem(p, state, stats)).join('')}
 
     ${
       archived.length > 0
         ? `
       <div class="section-title">${t('archived')}</div>
-      ${archived.map((p) => renderProjectItem(p, state)).join('')}
+      ${archived.map((p) => renderProjectItem(p, state, stats)).join('')}
     `
         : ''
     }
   `;
 }
 
-function renderProjectItem(p: Project, state: AppState): string {
-  const total = getProjectTotalTime(state, p.id);
+function renderProjectItem(
+  p: Project,
+  state: AppState,
+  stats: Map<string, ProjectStat>
+): string {
+  const stat = stats.get(p.id) ?? { count: 0, total: 0 };
   const isActive = state.activeSession?.projectId === p.id;
+  const sessionLabel = stat.count > 1 ? t('session_plural') : t('session_singular');
   return `
     <div class="project-item ${p.archived ? 'archived' : ''}" data-project-id="${p.id}">
       <div class="color-dot" style="background:${p.color}"></div>
       <div class="project-info">
         <div class="project-name">${escapeHtml(p.name)}</div>
-        <div class="project-meta">${
-          state.sessions.filter((s) => s.projectId === p.id).length
-        } ${
-    state.sessions.filter((s) => s.projectId === p.id).length > 1 ? t('session_plural') : t('session_singular')
-  }</div>
+        <div class="project-meta">${stat.count} ${sessionLabel}</div>
       </div>
       ${isActive ? `<span class="active-badge">${t('active_badge')}</span>` : ''}
-      <div class="project-time">${formatDuration(total)}</div>
+      <div class="project-time">${formatDuration(stat.total)}</div>
       <button class="project-archive-btn" data-archive-id="${p.id}" title="${p.archived ? t('unarchive_title') : t('archive_title')}">
         ${p.archived ? '<span class="material-symbols-outlined">unarchive</span>' : '<span class="material-symbols-outlined">archive</span>'}
       </button>

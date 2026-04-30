@@ -45,13 +45,22 @@ export function startSession(
 
 export function startTick(state: AppState, onTick: () => void): void {
   stopTick();
+  // Persist a checkpoint every 30 ticks (~30s) for crash recovery only.
+  // Per-tick saves were rewriting localStorage every second — dominant cost
+  // once sessions[] grew. Duration is recomputed from startedAt on reload,
+  // so missing the last <30s is harmless.
+  let ticksSinceSave = 0;
   tickInterval = window.setInterval(() => {
     if (!state.activeSession) return;
     if (state.activeSession.idlePaused) return;
     state.activeSession.duration = Math.floor(
       (Date.now() - state.activeSession.startedAt) / 1000
     );
-    saveState(state);
+    ticksSinceSave += 1;
+    if (ticksSinceSave >= 30) {
+      saveState(state);
+      ticksSinceSave = 0;
+    }
     onTick();
   }, 1000);
 }

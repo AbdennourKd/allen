@@ -20,11 +20,20 @@ export function loadState(): AppState {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return defaultState();
     const parsed = JSON.parse(raw) as AppState;
+    const activeSession = parsed.activeSession ?? null;
+    // Recompute duration from startedAt — the tick checkpoints every 30s,
+    // so the persisted duration is up to 30s stale on reload.
+    if (activeSession && !activeSession.idlePaused) {
+      activeSession.duration = Math.max(
+        0,
+        Math.floor((Date.now() - activeSession.startedAt) / 1000)
+      );
+    }
     // Defensive: ensure required fields exist (schema evolution safety)
     return {
       projects: parsed.projects ?? [],
       sessions: parsed.sessions ?? [],
-      activeSession: parsed.activeSession ?? null,
+      activeSession,
       settings: {
         idleThreshold: parsed.settings?.idleThreshold ?? 300,
         workDayHours: parsed.settings?.workDayHours ?? 8,
