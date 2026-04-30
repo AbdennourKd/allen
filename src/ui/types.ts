@@ -72,6 +72,9 @@ export type AppState = {
   sessions: Session[];
   activeSession: Session | null;
   settings: AppSettings;
+  // Map of Figma fileId → projectId. Lets the plugin auto-select the
+  // project the user last tracked in this file when reopening it.
+  fileProjectMap: Record<string, string>;
 };
 
 export type ViewName = 'timer' | 'report' | 'projects' | 'settings';

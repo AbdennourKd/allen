@@ -35,6 +35,7 @@ export type RenderState = {
   showNewProjectForm: boolean;
   newProjectColor: string;
   confirmingClear: boolean;
+  isMinimized: boolean;
 };
 
 export type Callbacks = {
@@ -61,6 +62,7 @@ export type Callbacks = {
   onToggleNewProjectForm: () => void;
   onNewProjectColorChange: (color: string) => void;
   onLangChange: (lang: Lang) => void;
+  onToggleMinimize: () => void;
 };
 
 // ================================================================
@@ -103,16 +105,50 @@ export function updateTimerDisplay(state: AppState): void {
 
 function buildHTML(state: AppState, rs: RenderState): string {
   const dir = isRTL() ? 'rtl' : 'ltr';
+  if (rs.isMinimized) {
+    return renderMiniBar(state, dir);
+  }
   return `
     <div class="header" dir="${dir}">
       <span class="header-title">${t('header_title')}</span>
       ${state.activeSession ? `<span class="header-sub">${t('header_running')}</span>` : ''}
+      <button id="btn-minimize" class="header-icon-btn" title="${t('minimize')}">
+        <span class="material-symbols-outlined">close_fullscreen</span>
+      </button>
     </div>
     <div class="content" dir="${dir}">
       ${renderView(state, rs)}
     </div>
     ${renderNavTabs(rs.view)}
     ${rs.showNoteModal ? renderNoteModal() : ''}
+  `;
+}
+
+function renderMiniBar(state: AppState, dir: string): string {
+  const session = state.activeSession;
+  if (session) {
+    const phaseColor = PHASE_COLORS[session.phase];
+    const cls = session.idlePaused ? 'idle' : 'running';
+    return `
+      <div class="mini-bar ${cls}" dir="${dir}">
+        <span class="phase-dot" style="background:${phaseColor}"></span>
+        <span class="mini-timer ${cls}" id="timer-display">${formatTime(session.duration)}</span>
+        <button id="btn-stop" class="mini-action mini-stop" title="${t('btn_stop')}">
+          <span class="material-symbols-outlined">stop</span>
+        </button>
+        <button id="btn-expand" class="mini-action" title="${t('expand')}">
+          <span class="material-symbols-outlined">open_in_full</span>
+        </button>
+      </div>
+    `;
+  }
+  return `
+    <div class="mini-bar idle-empty" dir="${dir}">
+      <span class="mini-title">${t('header_title')}</span>
+      <button id="btn-expand" class="mini-action" title="${t('expand')}">
+        <span class="material-symbols-outlined">open_in_full</span>
+      </button>
+    </div>
   `;
 }
 
@@ -645,6 +681,22 @@ function attachListeners(
   rs: RenderState,
   cb: Callbacks
 ): void {
+  // Mini bar (replaces full UI)
+  if (rs.isMinimized) {
+    app
+      .querySelector<HTMLButtonElement>('#btn-expand')
+      ?.addEventListener('click', cb.onToggleMinimize);
+    app
+      .querySelector<HTMLButtonElement>('#btn-stop')
+      ?.addEventListener('click', cb.onStop);
+    return;
+  }
+
+  // Header minimize
+  app
+    .querySelector<HTMLButtonElement>('#btn-minimize')
+    ?.addEventListener('click', cb.onToggleMinimize);
+
   // Nav tabs
   app.querySelectorAll<HTMLButtonElement>('.nav-tab').forEach((tab) => {
     tab.addEventListener('click', () => {

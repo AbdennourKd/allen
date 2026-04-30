@@ -61,6 +61,11 @@ let showNoteModal = false;
 let showNewProjectForm = false;
 let newProjectColor: string = PROJECT_PALETTE[0];
 let confirmingClear = false;
+let isMinimized = false;
+
+function postToSandbox(msg: { type: string; mode?: string }): void {
+  parent.postMessage({ pluginMessage: msg }, '*');
+}
 
 // ================================================================
 // HELPERS
@@ -81,6 +86,7 @@ function getCurrentRenderState(): RenderState {
     showNewProjectForm,
     newProjectColor,
     confirmingClear,
+    isMinimized,
   };
 }
 
@@ -127,6 +133,9 @@ const idleCallbacks = {
 const callbacks: Callbacks = {
   onStart() {
     if (!selectedProjectId) return;
+    // Remember which project the user picked for this file so we can
+    // pre-select it next time they open the plugin in the same file.
+    state.fileProjectMap[currentFileId] = selectedProjectId;
     startSession(
       state,
       selectedProjectId,
@@ -139,7 +148,11 @@ const callbacks: Callbacks = {
   },
 
   onStop() {
-    stopSession(state, true, timerCallbacks);
+    // In mini mode the note modal would be invisible (mini bar replaces
+    // the full UI). The user minimized to stay focused — skip the note
+    // and just finalize. They can still add notes when stopping from
+    // the full UI.
+    stopSession(state, !isMinimized, timerCallbacks);
     clearIdleTimer();
   },
 
@@ -303,6 +316,12 @@ const callbacks: Callbacks = {
     saveState(state);
     doRender();
   },
+
+  onToggleMinimize() {
+    isMinimized = !isMinimized;
+    postToSandbox({ type: 'RESIZE', mode: isMinimized ? 'mini' : 'full' });
+    doRender();
+  },
 };
 
 // ================================================================
@@ -350,8 +369,20 @@ function init() {
     if (msg.type === 'INIT') {
       currentFileId = msg.fileId ?? 'local';
       currentFileName = msg.fileName ?? 'Untitled';
-      // If a session is running, update its file metadata
-      if (state.activeSession) {
+      // Auto-select the project last tracked in this file. Only override if
+      // no session is running and the mapped project still exists and is
+      // not archived — otherwise keep whatever was already selected.
+      if (!state.activeSession) {
+        const mapped = state.fileProjectMap[currentFileId];
+        if (mapped) {
+          const project = state.projects.find(
+            (p) => p.id === mapped && !p.archived
+          );
+          if (project) selectedProjectId = mapped;
+        }
+      } else {
+        // Session running — patch its file metadata in case the user moved
+        // to a different file mid-session.
         state.activeSession.fileId = currentFileId;
         state.activeSession.fileName = currentFileName;
         saveState(state);

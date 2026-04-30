@@ -80,6 +80,105 @@ input, select, textarea {
 .header-sub {
   font-size: 11px;
   color: var(--text-secondary);
+  margin-right: auto;
+  margin-left: 8px;
+}
+
+[dir="rtl"] .header-sub {
+  margin-right: 8px;
+  margin-left: auto;
+}
+
+.header-icon-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s, background 0.15s;
+}
+
+.header-icon-btn:hover {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+}
+
+.header-icon-btn .material-symbols-outlined {
+  font-size: 16px;
+}
+
+/* ---------- Mini bar (minimized mode) ---------- */
+.mini-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  flex: 1;
+  background: var(--bg);
+  user-select: none;
+}
+
+.mini-bar .phase-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.mini-timer {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+}
+
+.mini-timer.running {
+  color: var(--accent);
+}
+
+.mini-timer.idle {
+  color: var(--warning);
+}
+
+.mini-title {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.mini-action {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s, background 0.15s;
+  -webkit-app-region: no-drag;
+}
+
+.mini-action:hover {
+  color: var(--text-primary);
+  background: var(--surface-hover);
+}
+
+.mini-action.mini-stop:hover {
+  color: var(--danger);
+  background: rgba(242, 72, 34, 0.12);
+}
+
+.mini-action .material-symbols-outlined {
+  font-size: 16px;
 }
 
 /* ---------- Content ---------- */

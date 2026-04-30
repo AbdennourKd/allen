@@ -39,6 +39,8 @@ const strings: Record<Lang, Record<string, string>> = {
     // Header
     header_title: 'Project Tracker',
     header_running: '● running',
+    minimize: 'Minimize',
+    expand: 'Expand',
     // Timer
     label_project: 'Project',
     label_phase: 'Phase',
@@ -103,6 +105,8 @@ const strings: Record<Lang, Record<string, string>> = {
     nav_settings: 'Réglages',
     header_title: 'Project Tracker',
     header_running: '● en cours',
+    minimize: 'Réduire',
+    expand: 'Agrandir',
     label_project: 'Projet',
     label_phase: 'Phase',
     empty_project: "Créer un projet d'abord",
@@ -162,6 +166,8 @@ const strings: Record<Lang, Record<string, string>> = {
     nav_settings: 'الإعدادات',
     header_title: 'Project Tracker',
     header_running: '● قيد التشغيل',
+    minimize: 'تصغير',
+    expand: 'تكبير',
     label_project: 'المشروع',
     label_phase: 'المرحلة',
     empty_project: 'أنشئ مشروعاً أولاً',

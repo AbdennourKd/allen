@@ -12,6 +12,7 @@ export function defaultState(): AppState {
       workDayHours: 8,
       lang: 'fr',
     },
+    fileProjectMap: {},
   };
 }
 
@@ -39,6 +40,7 @@ export function loadState(): AppState {
         workDayHours: parsed.settings?.workDayHours ?? 8,
         lang: parsed.settings?.lang ?? 'fr',
       },
+      fileProjectMap: parsed.fileProjectMap ?? {},
     };
   } catch {
     return defaultState();
