@@ -1,4 +1,4 @@
-// Pure utility functions — no side effects, no DOM.
+// Pure utility functions. No side effects, no DOM.
 
 import { AppState, Granularity, Phase, PHASE_COLORS, PROJECT_PALETTE, Project, Session } from './types';
 import { getDayShort, getLocale, getMonthName, t } from './i18n';
@@ -150,7 +150,7 @@ export function groupByProject(
     .sort((a, b) => b.duration - a.duration);
 }
 
-// Custom date range for on-demand exports — inclusive of both bounds' full days.
+// Custom date range for on-demand exports (inclusive of both bounds' full days).
 export function getSessionsInDateRange(
   state: AppState,
   fromDateStr: string,
@@ -240,7 +240,7 @@ export function hexToRGB(hex: string): { r: number; g: number; b: number } {
 }
 
 // Deterministic color for phases outside the built-in PHASE_COLORS map
-// (i.e. user-added custom phases) — hashes the name into PROJECT_PALETTE.
+// (i.e. user-added custom phases); hashes the name into PROJECT_PALETTE.
 export function getPhaseColor(phase: Phase): string {
   const known = PHASE_COLORS[phase];
   if (known) return known;

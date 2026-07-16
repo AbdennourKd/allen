@@ -2,7 +2,7 @@
 
 // Phases are free-form strings: PHASES lists the built-in defaults, but users
 // can add their own (stored in AppState.customPhases). Colors for custom
-// phases are derived deterministically — see helpers.ts getPhaseColor().
+// phases are derived deterministically; see helpers.ts getPhaseColor().
 export type Phase = string;
 
 export const PHASES: Phase[] = [
@@ -50,7 +50,7 @@ export type Session = {
   // Manual pause via the Pause button, distinct from idle auto-pause.
   manualPaused?: boolean;
   manualPauseStartedAt?: number;
-  // Snapshot of settings.userName at session start — identifies who logged
+  // Snapshot of settings.userName at session start. Identifies who logged
   // the session when a file is shared between multiple people.
   user?: string;
 };
@@ -67,7 +67,7 @@ export type AppSettings = {
   idleThreshold: number;
   workDayHours: number;
   lang: string;
-  // Optional — shown on sessions so a shared file can tell who tracked what.
+  // Optional. Shown on sessions so a shared file can tell who tracked what.
   userName: string;
 };
 

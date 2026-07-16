@@ -1,4 +1,4 @@
-// Internationalization — EN, FR, AR translations.
+// Internationalization: EN, FR, AR translations.
 
 export type Lang = 'en' | 'fr' | 'ar';
 export const LANGS: Lang[] = ['en', 'fr', 'ar'];
@@ -45,8 +45,8 @@ const strings: Record<Lang, Record<string, string>> = {
     label_project: 'Project',
     label_phase: 'Phase',
     empty_project: 'Create a project first',
-    choose_project: '— Choose —',
-    idle_banner: 'Idle detected — session paused',
+    choose_project: 'Choose a project',
+    idle_banner: 'Idle detected. Session paused.',
     btn_resume: 'Resume',
     btn_start: 'Start',
     btn_stop: 'Stop',
@@ -116,7 +116,7 @@ const strings: Record<Lang, Record<string, string>> = {
     btn_clear_data: 'Clear all data',
     // Note modal
     note_title: 'Session note',
-    note_sub: 'Optional — briefly describe what you did.',
+    note_sub: 'Optional: briefly describe what you did.',
     note_placeholder: 'E.g.: Dashboard component redesign...',
     btn_skip: 'Skip',
     btn_save: 'Save',
@@ -133,8 +133,8 @@ const strings: Record<Lang, Record<string, string>> = {
     label_project: 'Projet',
     label_phase: 'Phase',
     empty_project: "Créer un projet d'abord",
-    choose_project: '— Choisir —',
-    idle_banner: 'Idle détecté — session en pause',
+    choose_project: 'Choisir un projet',
+    idle_banner: 'Idle détecté. Session en pause.',
     btn_resume: 'Reprendre',
     btn_start: 'Start',
     btn_stop: 'Stop',
@@ -200,7 +200,7 @@ const strings: Record<Lang, Record<string, string>> = {
     btn_confirm_clear: 'Oui, tout effacer',
     btn_clear_data: 'Effacer toutes les données',
     note_title: 'Note de session',
-    note_sub: 'Optionnel — décris brièvement ce que tu as fait.',
+    note_sub: 'Optionnel : décris brièvement ce que tu as fait.',
     note_placeholder: 'Ex: Refonte du dashboard composants...',
     btn_skip: 'Ignorer',
     btn_save: 'Enregistrer',
@@ -217,8 +217,8 @@ const strings: Record<Lang, Record<string, string>> = {
     label_project: 'المشروع',
     label_phase: 'المرحلة',
     empty_project: 'أنشئ مشروعاً أولاً',
-    choose_project: '— اختر —',
-    idle_banner: 'خمول — الجلسة متوقفة مؤقتاً',
+    choose_project: 'اختر مشروعاً',
+    idle_banner: 'تم اكتشاف خمول. الجلسة متوقفة مؤقتاً.',
     btn_resume: 'استئناف',
     btn_start: 'ابدأ',
     btn_stop: 'إيقاف',
@@ -284,7 +284,7 @@ const strings: Record<Lang, Record<string, string>> = {
     btn_confirm_clear: 'نعم، امسح الكل',
     btn_clear_data: 'مسح جميع البيانات',
     note_title: 'ملاحظة الجلسة',
-    note_sub: 'اختياري — صف بإيجاز ما قمت به.',
+    note_sub: 'اختياري: صف بإيجاز ما قمت به.',
     note_placeholder: 'مثال: إعادة تصميم لوحة المعلومات...',
     btn_skip: 'تخطي',
     btn_save: 'حفظ',

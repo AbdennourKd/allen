@@ -1,5 +1,5 @@
 // CSV + PDF export for weekly reports.
-// jsPDF is lazy-loaded on first PDF export — keeps the ~500 KB out of the
+// jsPDF is lazy-loaded on first PDF export, keeping the ~500 KB out of the
 // initial plugin open. Without this, every plugin launch downloads jsPDF
 // even if the user never exports.
 
@@ -131,7 +131,7 @@ export async function exportPDF(
   // Header
   doc.setTextColor(232, 232, 232);
   doc.setFontSize(18);
-  doc.text(`Rapport UX/UI — ${weekLabel}`, 20, 25);
+  doc.text(`Rapport UX/UI : ${weekLabel}`, 20, 25);
 
   // Total
   const total = sessions.reduce((a, s) => a + s.duration, 0);

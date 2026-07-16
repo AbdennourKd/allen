@@ -1,4 +1,4 @@
-// Timer engine — manages active session lifecycle.
+// Timer engine. Manages active session lifecycle.
 // Pure functions take state + callbacks to avoid circular imports with ui.ts.
 
 import { AppState, Phase, Session } from './types';
@@ -69,8 +69,8 @@ export function resumeSessionManually(state: AppState, onRender: () => void): vo
 export function startTick(state: AppState, onTick: () => void): void {
   stopTick();
   // Persist a checkpoint every 30 ticks (~30s) for crash recovery only.
-  // Per-tick saves were rewriting localStorage every second — dominant cost
-  // once sessions[] grew. Duration is recomputed from startedAt on reload,
+  // Per-tick saves were rewriting localStorage every second (dominant cost
+  // once sessions[] grew). Duration is recomputed from startedAt on reload,
   // so missing the last <30s is harmless.
   let ticksSinceSave = 0;
   tickInterval = window.setInterval(() => {
@@ -107,7 +107,7 @@ export function stopSession(
 
   state.activeSession.endedAt = Date.now();
   // While paused (idle or manual), duration is already frozen at the correct
-  // value — startedAt only shifts forward on resume, so recomputing here
+  // value. startedAt only shifts forward on resume, so recomputing here
   // would wrongly count the paused time as worked time.
   if (!state.activeSession.idlePaused && !state.activeSession.manualPaused) {
     state.activeSession.duration = Math.max(

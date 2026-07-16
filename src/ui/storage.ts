@@ -24,7 +24,7 @@ export function loadState(): AppState {
     if (!raw) return defaultState();
     const parsed = JSON.parse(raw) as AppState;
     const activeSession = parsed.activeSession ?? null;
-    // Recompute duration from startedAt — the tick checkpoints every 30s,
+    // Recompute duration from startedAt. The tick checkpoints every 30s,
     // so the persisted duration is up to 30s stale on reload.
     if (activeSession && !activeSession.idlePaused && !activeSession.manualPaused) {
       activeSession.duration = Math.max(
