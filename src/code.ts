@@ -1,11 +1,11 @@
-// Minimal Figma sandbox — opens UI, sends file info, handles resize.
+// Minimal Figma sandbox. Opens UI, sends file info, handles resize.
 
 const FULL_W = 400;
 const FULL_H = 580;
 const MINI_W = 220;
 const MINI_H = 64;
 
-figma.showUI(__html__, { width: FULL_W, height: FULL_H, title: 'Project Tracker' });
+figma.showUI(__html__, { width: FULL_W, height: FULL_H, title: 'Allen' });
 
 figma.ui.postMessage({
   type: 'INIT',

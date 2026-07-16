@@ -1,6 +1,6 @@
-# LinkedIn Drip Plan — Project Tracker
+# LinkedIn Drip Plan: Allen
 
-4 posts étalés sur ~2 semaines. Hook → launch → différenciateur → tuto actionnable.
+4 posts étalés sur ~2 semaines. Hook, launch, différenciateur, tuto actionnable.
 
 **Cadence suggérée :**
 - Semaine -1 : Post 1 (pre-launch, on chauffe)
@@ -17,7 +17,7 @@
 
 ---
 
-## Post 1 — Teaser + le problème (pre-launch, J-5)
+## Post 1 : Teaser + le problème (pre-launch, J-5)
 
 **Format :** problème personnel + liste qui scroll-stoppe
 
@@ -25,7 +25,7 @@
 >
 > Toggl ouvert dans un onglet. Notion pour les phases. Un Excel pour facturer.
 >
-> Bilan : 4-5h par semaine de friction admin. Multipliée par 50 semaines = une semaine entière perdue chaque année.
+> Bilan : 4-5h par semaine de friction admin. Multipliée par 50 semaines, ça fait une semaine entière perdue chaque année.
 >
 > 3 trucs que tout designer UX freelance subit en silence :
 >
@@ -43,22 +43,22 @@
 
 ---
 
-## Post 2 — Le reveal (jour J)
+## Post 2 : Le reveal (jour J)
 
 **Format :** annonce + démo (joins ton GIF/screenshot ici)
 
 > C'est en ligne.
 >
-> **Project Tracker** — un plugin Figma pour les designers UX qui veulent tracker leur temps **par phase**, sans quitter Figma.
+> **Allen**, un plugin Figma pour les designers UX qui veulent tracker leur temps **par phase**, sans quitter Figma.
 >
 > Ce qu'il fait :
-> → Timer par projet × phase (Research, Ideation, Wireframe, Prototype, Design, Review, Handoff — et tu peux ajouter tes propres phases)
+> → Timer par projet × phase (Research, Ideation, Wireframe, Prototype, Design, Review, Handoff, et tu peux ajouter tes propres phases)
 > → Pause manuelle, ou auto-pause quand tu es inactif (5 min par défaut, configurable)
 > → Rapports jour / semaine / mois / année, breakdown par phase et par projet
 > → Export CSV / PDF, y compris sur une plage de dates personnalisée
 > → Fichier partagé entre plusieurs designers ? Chaque session garde une trace de qui l'a trackée
 > → Multi-langue : FR / EN / AR (avec support RTL complet)
-> → Aucune inscription, aucun cloud — tout reste sur ta machine
+> → Aucune inscription, aucun cloud. Tout reste sur ta machine.
 >
 > Disponible sur Figma Community ici : [LIEN]
 >
@@ -68,9 +68,9 @@
 
 ---
 
-## Post 3 — Pourquoi c'est différent (J+7)
+## Post 3 : Pourquoi c'est différent (J+7)
 
-**Format :** insight métier + anecdote courte — le vrai différenciateur du produit
+**Format :** insight métier + anecdote courte. Le vrai différenciateur du produit.
 
 > Pourquoi tracker le temps "par projet" ne suffit pas.
 >
@@ -85,9 +85,9 @@
 >
 > Là tu vois où tu *overshoot*. Tu vois que tu sous-estimes systématiquement la Research. Tu ajustes ton chiffrage. Tu deviens plus rentable au projet d'après.
 >
-> C'est pour ça que Project Tracker oblige à choisir une phase à chaque démarrage de timer. Pas optionnel. Parce que sans ça, c'est juste un chronomètre.
+> C'est pour ça qu'Allen oblige à choisir une phase à chaque démarrage de timer. Pas optionnel. Parce que sans ça, c'est juste un chronomètre.
 >
-> Et l'honnêteté du temps compte autant que sa précision. J'ai déjà facturé un client pour 3h "de design" pendant lesquelles j'étais en réunion sur un AUTRE projet — j'avais oublié d'arrêter le timer en switchant. Maintenant le plugin le fait pour moi : après 5 min d'inactivité, il se met en pause automatiquement. Et si je sais que je pars, je le mets en pause moi-même.
+> Et l'honnêteté du temps compte autant que sa précision. J'ai déjà facturé un client pour 3h "de design" pendant lesquelles j'étais en réunion sur un AUTRE projet : j'avais oublié d'arrêter le timer en switchant. Maintenant le plugin le fait pour moi. Après 5 min d'inactivité, il se met en pause automatiquement. Et si je sais que je pars, je le mets en pause moi-même.
 >
 > Ton temps n'est pas une masse uniforme. Tracker comme tel.
 >
@@ -95,14 +95,14 @@
 
 ---
 
-## Post 4 — Mini tutorial + appel à feedback (J+14)
+## Post 4 : Mini tutorial + appel à feedback (J+14)
 
 **Format :** étape par étape, carrousel si possible (performe très bien), + CTA build-in-public
 
 > Comment passer de 0 à un rapport détaillé en 3 minutes.
 >
-> 1. **Installe Project Tracker** depuis Figma Community : [LIEN]
-> 2. **Ouvre n'importe quel fichier**, lance le plugin — il retrouve tout seul le bon projet si tu l'as déjà utilisé sur ce fichier
+> 1. **Installe Allen** depuis Figma Community : [LIEN]
+> 2. **Ouvre n'importe quel fichier**, lance le plugin. Il retrouve tout seul le bon projet si tu l'as déjà utilisé sur ce fichier.
 > 3. **Crée tes projets** dans l'onglet "Projets" (un click, pick une couleur)
 > 4. **Onglet Timer** → choisis projet + phase (ou ajoute la tienne) → ▶ Start
 > 5. **Travaille**. Le timer tourne. Pars en pause ou mets-le en pause toi-même, comme tu veux.
@@ -113,7 +113,7 @@
 >
 > Pas d'inscription. Pas de cloud. Pas de version premium qui débloque les features. Juste ton temps, tracké propre.
 >
-> Question : qu'est-ce qui te manque le plus aujourd'hui dans ton stack de gestion de temps ? Réponds en commentaire — je note tout pour la suite.
+> Question : qu'est-ce qui te manque le plus aujourd'hui dans ton stack de gestion de temps ? Réponds en commentaire, je note tout pour la suite.
 >
 > #FigmaPlugin #Tutorial #UXTools
 
@@ -122,15 +122,15 @@
 ## Notes générales
 
 **Visuels à préparer :**
-- Post 2 : GIF démo (15s) — création projet → start timer → vue rapport
+- Post 2 : GIF démo (15s), création projet, start timer, vue rapport
 - Post 3 : screenshot du breakdown par phase + du badge "pause" (idle ou manuelle)
-- Post 4 : carrousel 7 slides (1 étape par slide) — ce format performe TRÈS bien sur LinkedIn
+- Post 4 : carrousel 7 slides (1 étape par slide), ce format performe TRÈS bien sur LinkedIn
 
 **Pour le reach :**
 - Poste les mardi/mercredi/jeudi entre 8h et 11h (pic d'engagement LinkedIn)
 - Réponds à TOUS les commentaires dans la première heure (boost l'algo)
 - Engage avec des posts d'autres designers UX dans la journée qui précède ton post (warm up le réseau)
-- Ne mets pas de lien externe dans le corps du post — mets-le en premier commentaire (LinkedIn pénalise les liens sortants dans le post lui-même)
+- Ne mets pas de lien externe dans le corps du post, mets-le en premier commentaire (LinkedIn pénalise les liens sortants dans le post lui-même)
 
 **Variantes anglais :**
-Si tu veux dupliquer en anglais pour toucher l'international, tu peux poster les versions EN sur un cycle décalé d'1 jour (mais sur ton compte LinkedIn principal — pas un compte séparé).
+Si tu veux dupliquer en anglais pour toucher l'international, tu peux poster les versions EN sur un cycle décalé d'1 jour, mais sur ton compte LinkedIn principal, pas un compte séparé.

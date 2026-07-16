@@ -1,4 +1,4 @@
-// DOM rendering layer — 4 views + modals + nav.
+// DOM rendering layer: 4 views + modals + nav.
 // render() = full re-render (state/view change).
 // updateTimerDisplay() = cheap per-tick update (timer text only).
 
@@ -642,7 +642,7 @@ function renderDayBreakdown(
 
 function renderSessionsList(sessions: Session[], state: AppState): string {
   // sessions came from getPeriodSessions which returns a fresh filter()
-  // array, so we can sort it in place — no need to copy.
+  // array, so we can sort it in place; no need to copy.
   const sorted = sessions.sort((a, b) => b.startedAt - a.startedAt);
   return `
     <div class="section-title">${t('sessions_count')} (${sessions.length})</div>

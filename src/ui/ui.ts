@@ -1,4 +1,4 @@
-// UI entry point — owns all mutable UI state, wires callbacks, handles postMessage.
+// UI entry point. Owns all mutable UI state, wires callbacks, handles postMessage.
 
 import {
   AppSettings,
@@ -170,7 +170,7 @@ const callbacks: Callbacks = {
 
   onStop() {
     // In mini mode the note modal would be invisible (mini bar replaces
-    // the full UI). The user minimized to stay focused — skip the note
+    // the full UI). The user minimized to stay focused, so skip the note
     // and just finalize. They can still add notes when stopping from
     // the full UI.
     stopSession(state, !isMinimized, timerCallbacks);
@@ -498,7 +498,7 @@ function init() {
   // see the current `state` reference (it is rebound on Clear Data).
   initIdleListeners(() => state, idleCallbacks);
 
-  // Resume tick independently of INIT message — works both in Figma
+  // Resume tick independently of INIT message. Works both in Figma
   // (where INIT arrives instantly) and in isolated preview contexts.
   if (state.activeSession) {
     startTick(state, onTick);
@@ -548,7 +548,7 @@ function init() {
     }
   });
 
-  // Listen for INIT from Figma sandbox — updates file metadata on active session
+  // Listen for INIT from Figma sandbox. Updates file metadata on active session
   window.onmessage = (event: MessageEvent) => {
     const msg = event.data?.pluginMessage;
     if (!msg) return;
@@ -557,7 +557,7 @@ function init() {
       currentFileName = msg.fileName ?? 'Untitled';
       // Auto-select the project last tracked in this file. Only override if
       // no session is running and the mapped project still exists and is
-      // not archived — otherwise keep whatever was already selected.
+      // not archived. Otherwise keep whatever was already selected.
       if (!state.activeSession) {
         const mapped = state.fileProjectMap[currentFileId];
         if (mapped) {
@@ -566,7 +566,7 @@ function init() {
           );
           if (project) selectedProjectId = mapped;
         } else {
-          // Never seen this file before — try to auto-detect the project
+          // Never seen this file before, so try to auto-detect the project
           // from the Figma file name (e.g. file "Sogpred — Landing" matches
           // project "Sogpred").
           const match = matchProjectByFileName(
@@ -580,7 +580,7 @@ function init() {
           }
         }
       } else {
-        // Session running — patch its file metadata in case the user moved
+        // Session running, so patch its file metadata in case the user moved
         // to a different file mid-session.
         state.activeSession.fileId = currentFileId;
         state.activeSession.fileName = currentFileName;

@@ -1,4 +1,4 @@
-// Idle detection — pauses active session duration accumulation after N seconds of inactivity.
+// Idle detection. Pauses active session duration accumulation after N seconds of inactivity.
 // Auto-resumes on any activity. Adjusts session.startedAt on resume so duration stays accurate.
 
 import { AppState } from './types';

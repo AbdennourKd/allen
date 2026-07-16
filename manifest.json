@@ -1,6 +1,6 @@
 {
-  "name": "Project Tracker — UX Time Tracking",
-  "id": "ux-project-tracker",
+  "name": "Allen: UX Time Tracking",
+  "id": "allen-ux-time-tracking",
   "api": "1.0.0",
   "main": "dist/code.js",
   "ui": "dist/ui.html",
