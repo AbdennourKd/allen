@@ -11,8 +11,10 @@ export function defaultState(): AppState {
       idleThreshold: 300,
       workDayHours: 8,
       lang: 'fr',
+      userName: '',
     },
     fileProjectMap: {},
+    customPhases: [],
   };
 }
 
@@ -24,7 +26,7 @@ export function loadState(): AppState {
     const activeSession = parsed.activeSession ?? null;
     // Recompute duration from startedAt — the tick checkpoints every 30s,
     // so the persisted duration is up to 30s stale on reload.
-    if (activeSession && !activeSession.idlePaused) {
+    if (activeSession && !activeSession.idlePaused && !activeSession.manualPaused) {
       activeSession.duration = Math.max(
         0,
         Math.floor((Date.now() - activeSession.startedAt) / 1000)
@@ -39,8 +41,10 @@ export function loadState(): AppState {
         idleThreshold: parsed.settings?.idleThreshold ?? 300,
         workDayHours: parsed.settings?.workDayHours ?? 8,
         lang: parsed.settings?.lang ?? 'fr',
+        userName: parsed.settings?.userName ?? '',
       },
       fileProjectMap: parsed.fileProjectMap ?? {},
+      customPhases: parsed.customPhases ?? [],
     };
   } catch {
     return defaultState();

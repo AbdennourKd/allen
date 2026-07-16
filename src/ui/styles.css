@@ -335,6 +335,23 @@ input, select, textarea {
   margin-bottom: 16px;
 }
 
+.phase-select-row {
+  display: flex;
+  gap: 6px;
+}
+
+.phase-select-row .select {
+  flex: 1;
+}
+
+.phase-select-row .btn-icon {
+  flex-shrink: 0;
+  padding: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* ---------- Timer display ---------- */
 .timer-block {
   display: flex;
@@ -612,7 +629,65 @@ input, select, textarea {
   font-variant-numeric: tabular-nums;
 }
 
+/* ---------- Day goal ---------- */
+.day-goal {
+  margin-top: 14px;
+}
+
+.day-goal-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.day-goal-track {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.day-goal-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--success);
+  transition: width 0.3s ease;
+}
+
 /* ---------- Report view ---------- */
+.granularity-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 3px;
+}
+
+.granularity-tab {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 6px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.granularity-tab:hover {
+  color: var(--text-primary);
+}
+
+.granularity-tab.active {
+  background: var(--surface-hover);
+  color: var(--accent);
+}
+
 .report-nav {
   display: flex;
   align-items: center;
@@ -715,6 +790,31 @@ input, select, textarea {
   margin-left: auto;
 }
 
+[dir="rtl"] .session-project {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.session-edit-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.session-edit-btn:hover {
+  color: var(--accent);
+}
+
+.session-edit-btn .material-symbols-outlined {
+  font-size: 14px;
+}
+
 .session-duration {
   font-size: 12px;
   font-weight: 600;
@@ -737,6 +837,66 @@ input, select, textarea {
   font-style: italic;
   margin-top: 2px;
   line-height: 1.5;
+}
+
+.session-user {
+  font-size: 10px;
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.session-user .material-symbols-outlined {
+  font-size: 12px;
+}
+
+/* ---------- Custom export ---------- */
+.custom-export {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 11px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+}
+
+.link-btn:hover {
+  color: var(--accent);
+}
+
+.link-btn .material-symbols-outlined {
+  font-size: 14px;
+}
+
+.custom-export-form {
+  margin-top: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  text-align: left;
+}
+
+.custom-export-dates {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.custom-export-dates .input {
+  flex: 1;
 }
 
 /* ---------- Export buttons ---------- */
@@ -829,7 +989,8 @@ input, select, textarea {
   letter-spacing: 0.05em;
 }
 
-.project-archive-btn {
+.project-archive-btn,
+.project-edit-btn {
   background: none;
   border: none;
   color: var(--text-muted);
@@ -840,11 +1001,13 @@ input, select, textarea {
   transition: opacity 0.15s, color 0.15s;
 }
 
-.project-item:hover .project-archive-btn {
+.project-item:hover .project-archive-btn,
+.project-item:hover .project-edit-btn {
   opacity: 1;
 }
 
-.project-archive-btn:hover {
+.project-archive-btn:hover,
+.project-edit-btn:hover {
   color: var(--text-primary);
 }
 
@@ -898,6 +1061,45 @@ input, select, textarea {
   gap: 8px;
   margin-top: 12px;
   justify-content: flex-end;
+}
+
+.phase-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.phase-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 4px 4px 10px;
+  font-size: 11px;
+  color: var(--text-primary);
+}
+
+.phase-chip-remove {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.phase-chip-remove:hover {
+  color: var(--danger);
+  background: rgba(242, 72, 34, 0.12);
+}
+
+.phase-chip-remove .material-symbols-outlined {
+  font-size: 13px;
 }
 
 /* ---------- Settings ---------- */

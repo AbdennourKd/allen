@@ -3,6 +3,7 @@
 import {
   AppSettings,
   AppState,
+  Granularity,
   Phase,
   PROJECT_PALETTE,
   Project,
@@ -12,6 +13,8 @@ import { defaultState, loadState, saveState, clearState } from './storage';
 import {
   finalizeSession,
   hasActiveTick,
+  pauseSessionManually,
+  resumeSessionManually,
   startSession,
   startTick,
   stopSession,
@@ -33,9 +36,11 @@ import {
 import { exportCSV, exportPDF } from './export';
 import {
   generateId,
+  getPeriodRange,
+  getPeriodSessions,
   getProjectName as getProjectNameHelper,
-  getWeekLabel,
-  getWeekSessions,
+  getSessionsInDateRange,
+  matchProjectByFileName,
 } from './helpers';
 import { Lang, setLang } from './i18n';
 
@@ -46,7 +51,8 @@ import { Lang, setLang } from './i18n';
 let state: AppState = loadState();
 
 let currentView: ViewName = 'timer';
-let weekOffset = 0;
+let periodOffset = 0;
+let granularity: Granularity = 'week';
 let reportProjectFilter: string = 'all';
 let currentFileId = 'local';
 let currentFileName = 'Untitled';
@@ -62,6 +68,13 @@ let showNewProjectForm = false;
 let newProjectColor: string = PROJECT_PALETTE[0];
 let confirmingClear = false;
 let isMinimized = false;
+let showNewPhaseForm = false;
+let editingSessionId: string | null = null;
+let editingProjectId: string | null = null;
+let editProjectColor: string = PROJECT_PALETTE[0];
+let showCustomExport = false;
+let customExportFrom = '';
+let customExportTo = '';
 
 function postToSandbox(msg: { type: string; mode?: string }): void {
   parent.postMessage({ pluginMessage: msg }, '*');
@@ -78,7 +91,8 @@ function getProjectName(id: string): string {
 function getCurrentRenderState(): RenderState {
   return {
     view: currentView,
-    weekOffset,
+    periodOffset,
+    granularity,
     reportProjectFilter,
     selectedProjectId,
     selectedPhase,
@@ -87,6 +101,13 @@ function getCurrentRenderState(): RenderState {
     newProjectColor,
     confirmingClear,
     isMinimized,
+    showNewPhaseForm,
+    editingSessionId,
+    editingProjectId,
+    editProjectColor,
+    showCustomExport,
+    customExportFrom,
+    customExportTo,
   };
 }
 
@@ -156,16 +177,32 @@ const callbacks: Callbacks = {
     clearIdleTimer();
   },
 
-  onWeekPrev() {
-    weekOffset -= 1;
+  onPause() {
+    pauseSessionManually(state, doRender);
+  },
+
+  onResumePause() {
+    resumeSessionManually(state, doRender);
+    // Idle detection should only resume once the user is actually back.
+    resetIdleTimer(state, idleCallbacks.onIdle);
+  },
+
+  onPeriodPrev() {
+    periodOffset -= 1;
     doRender();
   },
 
-  onWeekNext() {
-    if (weekOffset < 0) {
-      weekOffset += 1;
+  onPeriodNext() {
+    if (periodOffset < 0) {
+      periodOffset += 1;
       doRender();
     }
+  },
+
+  onGranularityChange(g) {
+    granularity = g;
+    periodOffset = 0;
+    doRender();
   },
 
   onClearFilter() {
@@ -176,7 +213,7 @@ const callbacks: Callbacks = {
   onProjectClick(projectId: string) {
     reportProjectFilter = projectId;
     currentView = 'report';
-    weekOffset = 0;
+    periodOffset = 0;
     doRender();
   },
 
@@ -193,6 +230,32 @@ const callbacks: Callbacks = {
     showNewProjectForm = false;
     newProjectColor = PROJECT_PALETTE[0];
     if (!selectedProjectId) selectedProjectId = project.id;
+    doRender();
+  },
+
+  onToggleEditProject(projectId: string) {
+    if (editingProjectId === projectId) {
+      editingProjectId = null;
+    } else {
+      editingProjectId = projectId;
+      editProjectColor = state.projects.find((p) => p.id === projectId)?.color ?? PROJECT_PALETTE[0];
+      showNewProjectForm = false;
+    }
+    doRender();
+  },
+
+  onEditProjectColorChange(color: string) {
+    editProjectColor = color;
+  },
+
+  onSaveProjectEdit(projectId: string, name: string, color: string) {
+    const project = state.projects.find((p) => p.id === projectId);
+    if (!project) return;
+    const trimmed = name.trim();
+    if (trimmed) project.name = trimmed;
+    project.color = color;
+    saveState(state);
+    editingProjectId = null;
     doRender();
   },
 
@@ -238,11 +301,14 @@ const callbacks: Callbacks = {
     selectedProjectId = '';
     selectedPhase = 'Design';
     currentView = 'timer';
-    weekOffset = 0;
+    periodOffset = 0;
     reportProjectFilter = 'all';
     showNoteModal = false;
     showNewProjectForm = false;
     confirmingClear = false;
+    editingProjectId = null;
+    editingSessionId = null;
+    showCustomExport = false;
     doRender();
   },
 
@@ -270,25 +336,82 @@ const callbacks: Callbacks = {
   },
 
   onExportCSV() {
-    const sessions = getWeekSessions(state, weekOffset, reportProjectFilter);
-    const label = getWeekLabel(weekOffset);
+    const sessions = getPeriodSessions(state, granularity, periodOffset, reportProjectFilter);
+    const label = getPeriodRange(granularity, periodOffset).label;
     exportCSV(sessions, getProjectName, label);
   },
 
   onExportPDF() {
-    const sessions = getWeekSessions(state, weekOffset, reportProjectFilter);
-    const label = getWeekLabel(weekOffset);
+    const sessions = getPeriodSessions(state, granularity, periodOffset, reportProjectFilter);
+    const label = getPeriodRange(granularity, periodOffset).label;
     exportPDF(sessions, label, getProjectName);
+  },
+
+  onToggleCustomExport() {
+    showCustomExport = !showCustomExport;
+    doRender();
+  },
+
+  onCustomExportFromChange(v: string) {
+    customExportFrom = v;
+  },
+
+  onCustomExportToChange(v: string) {
+    customExportTo = v;
+  },
+
+  onCustomExportCSV() {
+    if (!customExportFrom || !customExportTo) return;
+    const sessions = getSessionsInDateRange(state, customExportFrom, customExportTo, reportProjectFilter);
+    exportCSV(sessions, getProjectName, `${customExportFrom}_${customExportTo}`);
+  },
+
+  onCustomExportPDF() {
+    if (!customExportFrom || !customExportTo) return;
+    const sessions = getSessionsInDateRange(state, customExportFrom, customExportTo, reportProjectFilter);
+    exportPDF(sessions, `${customExportFrom} → ${customExportTo}`, getProjectName);
+  },
+
+  onEditSessionOpen(id: string) {
+    editingSessionId = id;
+    doRender();
+  },
+
+  onEditSessionCancel() {
+    editingSessionId = null;
+    doRender();
+  },
+
+  onEditSessionSave(id: string, updates: { phase: string; durationMinutes: number; note: string }) {
+    const session = state.sessions.find((s) => s.id === id);
+    if (!session) return;
+    session.phase = updates.phase;
+    session.duration = Math.max(0, Math.round(updates.durationMinutes * 60));
+    session.note = updates.note;
+    saveState(state);
+    editingSessionId = null;
+    doRender();
+  },
+
+  onEditSessionDelete(id: string) {
+    state.sessions = state.sessions.filter((s) => s.id !== id);
+    saveState(state);
+    editingSessionId = null;
+    doRender();
   },
 
   onViewChange(view: ViewName) {
     currentView = view;
     if (view !== 'report') {
-      // Keep filter sticky, but reset week to current when leaving
-      weekOffset = 0;
+      // Keep filter sticky, but reset period to current when leaving
+      periodOffset = 0;
     }
     confirmingClear = false;
     showNewProjectForm = false;
+    showNewPhaseForm = false;
+    editingProjectId = null;
+    editingSessionId = null;
+    showCustomExport = false;
     doRender();
   },
 
@@ -303,11 +426,50 @@ const callbacks: Callbacks = {
   onToggleNewProjectForm() {
     showNewProjectForm = !showNewProjectForm;
     newProjectColor = PROJECT_PALETTE[0];
+    editingProjectId = null;
     doRender();
   },
 
   onNewProjectColorChange(color: string) {
     newProjectColor = color;
+  },
+
+  onToggleNewPhaseForm() {
+    showNewPhaseForm = !showNewPhaseForm;
+    doRender();
+  },
+
+  onCreatePhase(name: string) {
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    const exists = [...state.customPhases].some(
+      (p) => p.toLowerCase() === trimmed.toLowerCase()
+    );
+    if (!exists) {
+      state.customPhases.push(trimmed);
+      saveState(state);
+    }
+    selectedPhase = trimmed;
+    showNewPhaseForm = false;
+    doRender();
+  },
+
+  onDeletePhase(name: string) {
+    state.customPhases = state.customPhases.filter(
+      (p) => p.toLowerCase() !== name.toLowerCase()
+    );
+    saveState(state);
+    // If the deleted phase was selected and no session is running, fall back
+    // to the first built-in default so the select never points at nothing.
+    if (!state.activeSession && selectedPhase.toLowerCase() === name.toLowerCase()) {
+      selectedPhase = 'Design';
+    }
+    doRender();
+  },
+
+  onUserNameChange(name: string) {
+    state.settings.userName = name.trim();
+    saveState(state);
   },
 
   onLangChange(lang: Lang) {
@@ -340,7 +502,7 @@ function init() {
   // (where INIT arrives instantly) and in isolated preview contexts.
   if (state.activeSession) {
     startTick(state, onTick);
-    if (!state.activeSession.idlePaused) {
+    if (!state.activeSession.idlePaused && !state.activeSession.manualPaused) {
       resetIdleTimer(state, idleCallbacks.onIdle);
     }
   }
@@ -351,7 +513,11 @@ function init() {
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       stopTick();
-    } else if (state.activeSession && !state.activeSession.idlePaused) {
+    } else if (
+      state.activeSession &&
+      !state.activeSession.idlePaused &&
+      !state.activeSession.manualPaused
+    ) {
       // Recompute and repaint immediately, then restart the per-second tick.
       state.activeSession.duration = Math.max(
         0,
@@ -359,6 +525,26 @@ function init() {
       );
       onTick();
       startTick(state, onTick);
+    }
+  });
+
+  // Keyboard shortcuts: S start, P pause/resume, E end (stop). Ignored while
+  // typing in a field or with a modifier held (avoid clobbering OS/browser shortcuts).
+  window.addEventListener('keydown', (e) => {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const target = e.target as HTMLElement | null;
+    const tag = target?.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    if (showNoteModal || editingSessionId) return;
+
+    const key = e.key.toLowerCase();
+    if (key === 's') {
+      if (!state.activeSession) callbacks.onStart();
+    } else if (key === 'e') {
+      if (state.activeSession) callbacks.onStop();
+    } else if (key === 'p') {
+      if (state.activeSession?.manualPaused) callbacks.onResumePause();
+      else if (state.activeSession && !state.activeSession.idlePaused) callbacks.onPause();
     }
   });
 
@@ -379,6 +565,19 @@ function init() {
             (p) => p.id === mapped && !p.archived
           );
           if (project) selectedProjectId = mapped;
+        } else {
+          // Never seen this file before — try to auto-detect the project
+          // from the Figma file name (e.g. file "Sogpred — Landing" matches
+          // project "Sogpred").
+          const match = matchProjectByFileName(
+            state.projects.filter((p) => !p.archived),
+            currentFileName
+          );
+          if (match) {
+            selectedProjectId = match.id;
+            state.fileProjectMap[currentFileId] = match.id;
+            saveState(state);
+          }
         }
       } else {
         // Session running — patch its file metadata in case the user moved

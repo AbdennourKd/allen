@@ -92,40 +92,25 @@ Chaque screenshot doit raconter UN bénéfice. L'utilisateur va swiper, donc cla
 À copier dans le champ Description sur Figma Community.
 
 ```
-Project Tracker is a time tracking plugin built for UX designers, by a UX designer.
+Project Tracker is a time tracker built for UX designers, by a UX designer.
 
-Most time trackers don't understand UX work. They give you one timer and one project. Reality: a project is Research, Ideation, Wireframes, Prototyping, Design, Review, and Handoff — and they all bleed into each other unless you track them separately.
+Most time trackers give you one timer and one project. A real design project is Research, Ideation, Wireframes, Prototyping, Design, Review, Handoff — they overlap constantly unless you track them separately. This plugin tracks project × phase, so you know exactly where your hours go.
 
-This plugin tracks time per project × phase. So you finally know where your hours actually go.
+Features:
+- Timer with project + custom phases (add your own on top of the defaults)
+- Manual pause, plus auto-pause when you're idle (threshold configurable)
+- Auto-detects the right project when you reopen a Figma file
+- Reports by day, week, month, or year — phase breakdown, session log
+- CSV and PDF export
+- English, French, العربية — full RTL support
+- Project archiving, color tagging, optional notes per session
+- Works on shared files: each session records who tracked it
 
-What's inside
+No account, no cloud sync, no telemetry. Everything stays in your browser's localStorage.
 
-→ Timer with project + phase selection (Research, Ideation, Wireframe, Prototype, Design, Review, Handoff)
-→ Auto-pause when you're idle (configurable threshold, default 5 min)
-→ Weekly reports: phase breakdown, day breakdown, full session log
-→ CSV and PDF export, ready for invoicing
-→ Multi-language interface: English, French, العربية (with full RTL support)
-→ Project archiving + color tagging
-→ Optional notes per session
+How it works: create a project, pick a phase, hit start. The timer pauses itself if you walk away, or you can pause it yourself. Stop, optionally add a note. Open Report to see the breakdown for any period, export to CSV or PDF.
 
-What's NOT inside
-
-→ No account. No login.
-→ No cloud sync. All data stays in your browser's localStorage.
-→ No telemetry. No analytics. No external service is ever called with your data.
-→ No premium tier. No paywall.
-
-How it works
-
-1. Create your projects with a color and name
-2. Pick a project + phase, click ▶
-3. Work in Figma. The timer auto-pauses when you walk away.
-4. Stop. Optionally add a note.
-5. Open the Report tab to see this week's breakdown. Export to CSV or PDF.
-
-Built for freelancers, agency designers, and anyone who needs to know where their hours go without selling their data to a SaaS.
-
-Feedback welcome at [your email].
+Feedback: abdennourkd2001@gmail.com
 ```
 
 ---

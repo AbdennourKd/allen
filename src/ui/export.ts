@@ -3,9 +3,10 @@
 // initial plugin open. Without this, every plugin launch downloads jsPDF
 // even if the user never exports.
 
-import { Phase, PHASE_COLORS, Session } from './types';
+import { Session } from './types';
 import {
   formatDuration,
+  getPhaseColor,
   groupByPhase,
   hexToRGB,
 } from './helpers';
@@ -58,12 +59,13 @@ export function exportCSV(
   getProjectName: (id: string) => string,
   weekLabel: string
 ): void {
-  const headers = ['Date', 'Projet', 'Phase', 'Durée (min)', 'Note', 'Fichier'];
+  const headers = ['Date', 'Projet', 'Phase', 'Durée (min)', 'Utilisateur', 'Note', 'Fichier'];
   const rows = sessions.map((s) => [
     new Date(s.startedAt).toLocaleDateString('fr-FR'),
     csvEscape(getProjectName(s.projectId)),
     s.phase,
     Math.round(s.duration / 60).toString(),
+    csvEscape(s.user ?? ''),
     csvEscape(s.note),
     csvEscape(s.fileName),
   ]);
@@ -152,7 +154,7 @@ export async function exportPDF(
   doc.setFontSize(10);
   for (const { phase, duration } of byPhase) {
     const pct = duration / maxVal;
-    const color = hexToRGB(PHASE_COLORS[phase as Phase]);
+    const color = hexToRGB(getPhaseColor(phase));
     doc.setFillColor(color.r, color.g, color.b);
     doc.rect(20, y, Math.max(pct * 100, 1), 5, 'F');
     doc.setTextColor(200, 200, 200);

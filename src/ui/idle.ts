@@ -53,7 +53,7 @@ export function initIdleListeners(
 
 export function resetIdleTimer(state: AppState, onIdle: () => void): void {
   clearIdleTimer();
-  if (!state.activeSession || state.activeSession.idlePaused) return;
+  if (!state.activeSession || state.activeSession.idlePaused || state.activeSession.manualPaused) return;
   const thresholdMs = state.settings.idleThreshold * 1000;
   idleTimeout = window.setTimeout(() => {
     if (!state.activeSession) return;

@@ -4,11 +4,15 @@
   "scripts": {
     "build": "node build.js",
     "watch": "node build.js --watch",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "cross-env NODE_OPTIONS=--no-experimental-webstorage vitest run"
   },
   "devDependencies": {
     "@figma/plugin-typings": "^1.101.1",
+    "cross-env": "^10.1.0",
     "esbuild": "^0.24.0",
-    "typescript": "^5.7.2"
+    "jsdom": "^29.1.1",
+    "typescript": "^5.7.2",
+    "vitest": "^4.1.10"
   }
 }
