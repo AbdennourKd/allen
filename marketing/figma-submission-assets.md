@@ -4,26 +4,13 @@ Tout ce qu'il faut préparer dans Figma avant de cliquer "Publish".
 
 ---
 
-## 1. Icône — 128 × 128 px (PNG)
+## 1. Icône — 128 × 128 px (PNG) — ✅ FAIT
 
-**Specs Figma :**
-- Format : PNG
-- Dimensions : 128×128 (Figma upscale automatiquement)
-- Background : doit être visible sur fond blanc ET noir (Figma teste les deux)
+`marketing/assets/icon-128.png` — anneau segmenté (un segment par phase, mêmes couleurs que `PHASE_COLORS` dans le plugin) avec un bouton play bleu au centre. Construit directement dans Figma pour rester cohérent avec le design system du plugin.
 
-**Direction créative suggérée :**
-- Un chrono / timer stylisé. Ex. cercle de progression incomplet (3/4) avec un point central.
-- Couleur primaire : `#0D99FF` (Figma blue) ou un gradient subtle bleu→violet
-- Ne PAS reprendre l'icône `timer` de Material Symbols telle quelle (générique)
-- Un peu de personnalité : par ex. un chrono dont le secteur est divisé en couleurs (les phases UX)
-- Évite le texte dans l'icône (pas lisible à 32px)
-
-**Trois directions à explorer en 30 minutes :**
-1. Cercle segmenté multi-couleur (chaque segment = une phase) avec aiguille
-2. Chiffre "00:00" stylisé en lettrage custom
-3. Stopwatch bouton "play" intégré, monochrome
-
-Pick the one that pops on les deux backgrounds.
+**Reste à vérifier avant submit :**
+- [ ] Zoom à 32px (taille réelle d'affichage dans les résultats de recherche) — les segments doivent rester distincts, pas juste une tache de couleur
+- [ ] Contrôle visuel sur fond blanc ET noir (le fond de l'icône est transparent, donc Figma composite dessus — vérifier qu'aucun segment ne se fond dans l'un des deux)
 
 ---
 
@@ -35,10 +22,12 @@ La grande image qui s'affiche en haut de la page Community. C'est le truc qui te
 **Composition recommandée :**
 - Côté gauche (40-50%) : le pitch en gros texte
   - Headline : "Track your UX time. By phase. Without leaving Figma."
-  - Sub : "Free. No signup. EN / FR / AR."
+  - Sub : "Free. No signup. Custom phases, flexible reports, EN / FR / AR."
 - Côté droit (50-60%) : un mockup de l'UI réelle dans un browser frame ou floating window
 - Background : dégradé bleu sombre type `#0a0e1a → #1a1f3a` ou solid `#1e1e1e` (la couleur du plugin)
 - Typo : Inter ou la même que ton plugin
+
+**Safe zone — important :** Figma recadre différemment la cover selon l'endroit où elle s'affiche (bannière large en haut de la fiche vs vignette carrée dans les résultats de recherche/grille). Garde tout élément textuel ou visuel important dans le **tiers central** de l'image — les 15-20% de chaque bord peuvent être coupés en vignette. Ne mets jamais de texte critique près des bords gauche/droit.
 
 **Évite :**
 - Trop de stock images (trop "AI generated")
@@ -49,30 +38,31 @@ La grande image qui s'affiche en haut de la page Community. C'est le truc qui te
 
 ## 3. Screenshots — 3 à 5 (1920 × 1080 ou 1280 × 720, PNG)
 
-Chaque screenshot doit raconter UN bénéfice. L'utilisateur va swiper, donc clarté > exhaustivité.
+Chaque screenshot doit raconter UN bénéfice. L'utilisateur va swiper, donc clarté > exhaustivité. **Le premier screenshot compte double** — c'est souvent lui qui sert de vignette dans les résultats de recherche, avant même que quelqu'un clique sur la fiche.
 
 ### Screenshot 1 — Le héros : Timer en action
-**Show :** Timer view avec un timer running, projet sélectionné, phase "Design", breakdown du jour visible en bas.
-**Caption (overlay top) :** "Track time per UX phase. One click."
-**État à capturer :** timer actif (couleur bleue), 1-2 phases déjà breakdown visibles dans Today.
+**Show :** Timer view avec un timer running, projet sélectionné, phase "Design", breakdown du jour visible en bas (avec la barre "objectif du jour" si elle a une valeur non-nulle — ça se voit bien).
+**Caption (overlay top) :** "Track time per phase. Pause it your way."
+**État à capturer :** timer actif (couleur bleue), 2-3 phases déjà dans le breakdown Today, barre d'objectif à ~40-60% (ni vide ni pleine — plus crédible).
 
-### Screenshot 2 — Rapport hebdo
-**Show :** Report view avec breakdown par phase + breakdown par jour + 3-4 sessions listées.
-**Caption :** "Weekly reports. Phase × Day. Ready to invoice."
-**État :** données réalistes (pas "Lorem"), 5+ sessions sur 4 jours.
+### Screenshot 2 — Phases personnalisées
+**Show :** Le sélecteur de phase ouvert avec le bouton "+", 1-2 phases custom déjà créées (ex: "QA Perso", "Client Review") à côté des phases par défaut.
+**Caption :** "Built-in phases, or make your own."
+**Pourquoi ce screenshot :** c'est une feature que peu de concurrents ont — vaut la peine d'un visuel dédié plutôt que de la noyer dans une liste de bullet points.
 
-### Screenshot 3 — Multi-langue + RTL
+### Screenshot 3 — Rapports flexibles
+**Show :** Report view avec les onglets jour/semaine/mois/année visibles en haut, un des onglets actif (mois ou année marche bien pour montrer que ce n'est "pas juste une semaine"), breakdown par phase + par projet + 3-4 sessions listées.
+**Caption :** "Day, week, month, year. Your call."
+**État :** données réalistes (pas "Lorem"), au moins 2 projets représentés pour que le breakdown "par projet" apparaisse.
+
+### Screenshot 4 — Multi-langue + RTL
 **Show :** Side-by-side : la même vue Settings en français à gauche, en arabe (RTL) à droite.
 **Caption :** "EN / FR / AR. Right-to-left supported."
 **Astuce :** ce visuel te différencie immédiatement de tous les concurrents.
 
-### Screenshot 4 — Idle detection
-**Show :** Le banner "Idle detected" jaune visible avec le bouton "Resume".
-**Caption :** "Auto-pause when you walk away. Honest billing, automatic."
-
 ### Screenshot 5 (optionnel) — Projects view
-**Show :** Liste de 5-6 projets avec couleurs distinctes, totaux de temps, un en "Active".
-**Caption :** "Color-code projects. See your portfolio at a glance."
+**Show :** Liste de 4-5 projets avec couleurs distinctes, totaux de temps, la pastille de rythme moyen ("~3h/sem") visible sur au moins un projet, un en "Active".
+**Caption :** "Color-code projects. See your pace."
 
 ---
 
@@ -123,6 +113,24 @@ Recommandation :
 - `ux-design`
 - `freelance`
 - `reporting`
+
+---
+
+## 7. Bonnes pratiques générales avant de publier
+
+**Cohérence visuelle entre tous les assets.** Icône, cover et screenshots doivent se sentir comme un seul objet : même bleu accent (`#0D99FF`), même thème sombre, même typo (Inter). Un icône coloré à côté d'une cover dans une palette différente donne une impression amateur avant même que le contenu soit lu.
+
+**Le premier visuel fait le travail.** Que ce soit la cover ou le screenshot 1, en pratique 80% des gens décident de cliquer ou scroller sur ce seul élément. Priorise ton temps de design là-dessus plutôt que de vouloir un polish uniforme sur les 5 screenshots.
+
+**Données réalistes partout, sans exception.** Pas de "Project 1", "Lorem ipsum", ou des durées rondes suspectes (2h00m00s). Utilise de vrais noms de projets fictifs mais crédibles (agence, client type) et des durées avec des minutes/secondes non-rondes — ça se voit à l'œil qu'une capture est mise en scène avec des données propres.
+
+**Ne promets rien que le produit ne fait pas.** Le tagline/description doivent décrire exactement les features livrées — pas de "coming soon" pour l'extension Chrome ou un mode équipe qui n'existe pas. Un utilisateur déçu à l'installation laisse un avis négatif, ce qui coûte plus cher en découvrabilité que ne pas mentionner la feature du tout.
+
+**Catégorie et tags orientent la découvrabilité autant que le texte.** Choisis la catégorie Figma la plus proche (Productivity / Utilities selon ce qui est disponible) — les utilisateurs browsent aussi par catégorie, pas seulement par recherche texte.
+
+**Le tagline doit se lire naturellement à voix haute.** Pas de bourrage de mots-clés ("time tracker time tracking UX design productivity tool"). Une phrase qui sonne comme une vraie phrase humaine convertit mieux et ne fait pas fuir.
+
+**Support email fonctionnel avant publication.** `abdennourkd2001@gmail.com` doit pouvoir recevoir et être surveillé — les premiers jours après publication sont ceux où le feedback (et les bugs) arrivent le plus.
 
 ---
 
