@@ -42,7 +42,7 @@ describe('timer manual pause/resume', () => {
 
     pauseSessionManually(state, () => {});
     vi.advanceTimersByTime(10000);
-    expect(state.activeSession!.duration).toBe(5); // frozen — tick loop skips paused sessions
+    expect(state.activeSession!.duration).toBe(5); // frozen: tick loop skips paused sessions
 
     resumeSessionManually(state, () => {});
     vi.advanceTimersByTime(3000);
