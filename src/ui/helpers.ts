@@ -1,6 +1,7 @@
 // Pure utility functions — no side effects, no DOM.
 
-import { AppState, Phase, Session } from './types';
+import { AppState, Granularity, Phase, PHASE_COLORS, PROJECT_PALETTE, Project, Session } from './types';
+import { getDayShort, getLocale, getMonthName, t } from './i18n';
 
 export function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
@@ -60,41 +61,10 @@ export function getWeekNumber(date: Date): number {
   return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
 }
 
-const MONTHS_FR = [
-  'Janvier',
-  'Février',
-  'Mars',
-  'Avril',
-  'Mai',
-  'Juin',
-  'Juillet',
-  'Août',
-  'Septembre',
-  'Octobre',
-  'Novembre',
-  'Décembre',
-];
-
 export function getWeekLabel(weekOffset: number): string {
   const monday = startOfWeek(new Date(), weekOffset);
   const weekNum = getWeekNumber(monday);
-  return `Semaine ${weekNum} · ${MONTHS_FR[monday.getMonth()]}`;
-}
-
-export function getWeekSessions(
-  state: AppState,
-  weekOffset: number,
-  projectFilter: string
-): Session[] {
-  const monday = startOfWeek(new Date(), weekOffset);
-  const sunday = endOfWeek(monday);
-  const start = monday.getTime();
-  const end = sunday.getTime();
-  return state.sessions.filter((s) => {
-    const inWeek = s.startedAt >= start && s.startedAt <= end;
-    const inProject = projectFilter === 'all' || s.projectId === projectFilter;
-    return inWeek && inProject;
-  });
+  return `${t('week_label')} ${weekNum} · ${getMonthName(monday.getMonth())}`;
 }
 
 export function groupByPhase(
@@ -117,7 +87,7 @@ export function groupByDay(
     const key = new Date(s.startedAt).toISOString().slice(0, 10);
     map.set(key, (map.get(key) ?? 0) + s.duration);
   }
-  const DAY_LABELS = ['Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa', 'Di'];
+  const DAY_LABELS = [0,1,2,3,4,5,6].map(i => getDayShort(i));
   // Return Mon–Sun in order for the current reference week
   const result: Array<{ day: string; label: string; duration: number }> = [];
   for (const [day, duration] of map.entries()) {
@@ -126,6 +96,78 @@ export function groupByDay(
     result.push({ day, label: DAY_LABELS[dayNum - 1], duration });
   }
   return result.sort((a, b) => a.day.localeCompare(b.day));
+}
+
+export function groupByDayOfMonth(
+  sessions: Session[]
+): Array<{ day: string; label: string; duration: number }> {
+  const map = new Map<string, number>();
+  for (const s of sessions) {
+    const key = new Date(s.startedAt).toISOString().slice(0, 10);
+    map.set(key, (map.get(key) ?? 0) + s.duration);
+  }
+  return Array.from(map.entries())
+    .map(([day, duration]) => ({ day, label: `${new Date(day).getDate()}`, duration }))
+    .sort((a, b) => a.day.localeCompare(b.day));
+}
+
+export function groupByMonth(
+  sessions: Session[]
+): Array<{ month: string; label: string; duration: number }> {
+  const map = new Map<string, number>();
+  for (const s of sessions) {
+    const d = new Date(s.startedAt);
+    const key = `${d.getFullYear()}-${String(d.getMonth()).padStart(2, '0')}`;
+    map.set(key, (map.get(key) ?? 0) + s.duration);
+  }
+  return Array.from(map.entries())
+    .map(([key, duration]) => ({
+      month: key,
+      label: getMonthName(Number(key.split('-')[1])).slice(0, 3),
+      duration,
+    }))
+    .sort((a, b) => a.month.localeCompare(b.month));
+}
+
+export function groupByProject(
+  state: AppState,
+  sessions: Session[]
+): Array<{ projectId: string; name: string; color: string; duration: number }> {
+  const map = new Map<string, number>();
+  for (const s of sessions) {
+    map.set(s.projectId, (map.get(s.projectId) ?? 0) + s.duration);
+  }
+  return Array.from(map.entries())
+    .map(([projectId, duration]) => {
+      const project = state.projects.find((p) => p.id === projectId);
+      return {
+        projectId,
+        name: project?.name ?? t('unknown_project'),
+        color: project?.color ?? '#888888',
+        duration,
+      };
+    })
+    .sort((a, b) => b.duration - a.duration);
+}
+
+// Custom date range for on-demand exports — inclusive of both bounds' full days.
+export function getSessionsInDateRange(
+  state: AppState,
+  fromDateStr: string,
+  toDateStr: string,
+  projectFilter: string
+): Session[] {
+  const start = new Date(fromDateStr);
+  start.setHours(0, 0, 0, 0);
+  const end = new Date(toDateStr);
+  end.setHours(23, 59, 59, 999);
+  const startMs = start.getTime();
+  const endMs = end.getTime();
+  return state.sessions.filter((s) => {
+    const inRange = s.startedAt >= startMs && s.startedAt <= endMs;
+    const inProject = projectFilter === 'all' || s.projectId === projectFilter;
+    return inRange && inProject;
+  });
 }
 
 export function getTodaySessions(state: AppState): Session[] {
@@ -164,7 +206,7 @@ export function getTodayPhaseBreakdown(
 }
 
 export function getProjectName(state: AppState, projectId: string): string {
-  return state.projects.find((p) => p.id === projectId)?.name ?? 'Projet inconnu';
+  return state.projects.find((p) => p.id === projectId)?.name ?? t('unknown_project');
 }
 
 export function getProjectTotalTime(state: AppState, projectId: string): number {
@@ -195,6 +237,92 @@ export function estimateProject(
 export function hexToRGB(hex: string): { r: number; g: number; b: number } {
   const n = parseInt(hex.slice(1), 16);
   return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+}
+
+// Deterministic color for phases outside the built-in PHASE_COLORS map
+// (i.e. user-added custom phases) — hashes the name into PROJECT_PALETTE.
+export function getPhaseColor(phase: Phase): string {
+  const known = PHASE_COLORS[phase];
+  if (known) return known;
+  let hash = 0;
+  for (let i = 0; i < phase.length; i++) {
+    hash = (hash * 31 + phase.charCodeAt(i)) | 0;
+  }
+  return PROJECT_PALETTE[Math.abs(hash) % PROJECT_PALETTE.length];
+}
+
+// Finds the project whose name best matches a Figma file name (case-
+// insensitive substring in either direction), used to auto-select a project
+// the first time a file is opened. Ties broken by most recently created.
+export function matchProjectByFileName(
+  projects: Project[],
+  fileName: string
+): Project | null {
+  const needle = fileName.trim().toLowerCase();
+  if (!needle) return null;
+  const candidates = projects.filter((p) => {
+    const name = p.name.trim().toLowerCase();
+    return name.length > 0 && (needle.includes(name) || name.includes(needle));
+  });
+  if (candidates.length === 0) return null;
+  return candidates.reduce((best, p) =>
+    p.createdAt > best.createdAt ? p : best
+  );
+}
+
+// ----------------------------------------------------------------
+// Period-based report aggregation (day / week / month / year)
+// ----------------------------------------------------------------
+
+export function getPeriodRange(
+  granularity: Granularity,
+  offset: number
+): { start: number; end: number; label: string } {
+  const now = new Date();
+  if (granularity === 'day') {
+    const d = new Date(now);
+    d.setDate(d.getDate() + offset);
+    d.setHours(0, 0, 0, 0);
+    const start = d.getTime();
+    const end = start + 86400000 - 1;
+    const label = d.toLocaleDateString(getLocale(), {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+    });
+    return { start, end, label };
+  }
+  if (granularity === 'month') {
+    const d = new Date(now.getFullYear(), now.getMonth() + offset, 1);
+    const start = d.getTime();
+    const end = new Date(d.getFullYear(), d.getMonth() + 1, 1).getTime() - 1;
+    const label = `${getMonthName(d.getMonth())} ${d.getFullYear()}`;
+    return { start, end, label };
+  }
+  if (granularity === 'year') {
+    const y = now.getFullYear() + offset;
+    const start = new Date(y, 0, 1).getTime();
+    const end = new Date(y + 1, 0, 1).getTime() - 1;
+    return { start, end, label: `${y}` };
+  }
+  // week
+  const monday = startOfWeek(now, offset);
+  const sunday = endOfWeek(monday);
+  return { start: monday.getTime(), end: sunday.getTime(), label: getWeekLabel(offset) };
+}
+
+export function getPeriodSessions(
+  state: AppState,
+  granularity: Granularity,
+  offset: number,
+  projectFilter: string
+): Session[] {
+  const { start, end } = getPeriodRange(granularity, offset);
+  return state.sessions.filter((s) => {
+    const inRange = s.startedAt >= start && s.startedAt <= end;
+    const inProject = projectFilter === 'all' || s.projectId === projectFilter;
+    return inRange && inProject;
+  });
 }
 
 export function escapeHtml(s: string): string {

@@ -1,9 +1,12 @@
 // CSV + PDF export for weekly reports.
-// jsPDF is loaded via CDN in index.html — accessed as window.jspdf.jsPDF.
+// jsPDF is lazy-loaded on first PDF export — keeps the ~500 KB out of the
+// initial plugin open. Without this, every plugin launch downloads jsPDF
+// even if the user never exports.
 
-import { Phase, PHASE_COLORS, Session } from './types';
+import { Session } from './types';
 import {
   formatDuration,
+  getPhaseColor,
   groupByPhase,
   hexToRGB,
 } from './helpers';
@@ -20,6 +23,28 @@ declare global {
   }
 }
 
+const JSPDF_URL =
+  'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+
+let jspdfLoadPromise: Promise<void> | null = null;
+
+function loadJsPDF(): Promise<void> {
+  if (window.jspdf?.jsPDF) return Promise.resolve();
+  if (jspdfLoadPromise) return jspdfLoadPromise;
+  jspdfLoadPromise = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = JSPDF_URL;
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => {
+      jspdfLoadPromise = null;
+      reject(new Error('Failed to load jsPDF'));
+    };
+    document.head.appendChild(script);
+  });
+  return jspdfLoadPromise;
+}
+
 type JsPDFInstance = {
   setFillColor: (r: number, g?: number, b?: number) => void;
   setTextColor: (r: number, g?: number, b?: number) => void;
@@ -34,12 +59,13 @@ export function exportCSV(
   getProjectName: (id: string) => string,
   weekLabel: string
 ): void {
-  const headers = ['Date', 'Projet', 'Phase', 'Durée (min)', 'Note', 'Fichier'];
+  const headers = ['Date', 'Projet', 'Phase', 'Durée (min)', 'Utilisateur', 'Note', 'Fichier'];
   const rows = sessions.map((s) => [
     new Date(s.startedAt).toLocaleDateString('fr-FR'),
     csvEscape(getProjectName(s.projectId)),
     s.phase,
     Math.round(s.duration / 60).toString(),
+    csvEscape(s.user ?? ''),
     csvEscape(s.note),
     csvEscape(s.fileName),
   ]);
@@ -78,14 +104,20 @@ function slugify(label: string): string {
     .toLowerCase();
 }
 
-export function exportPDF(
+export async function exportPDF(
   sessions: Session[],
   weekLabel: string,
   getProjectName: (id: string) => string
-): void {
-  if (!window.jspdf || !window.jspdf.jsPDF) {
-    console.error('jsPDF not loaded');
+): Promise<void> {
+  try {
+    await loadJsPDF();
+  } catch (err) {
+    console.error(err);
     alert('Erreur: jsPDF non chargé. Vérifie la connexion internet.');
+    return;
+  }
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    alert('Erreur: jsPDF non chargé.');
     return;
   }
 
@@ -122,7 +154,7 @@ export function exportPDF(
   doc.setFontSize(10);
   for (const { phase, duration } of byPhase) {
     const pct = duration / maxVal;
-    const color = hexToRGB(PHASE_COLORS[phase as Phase]);
+    const color = hexToRGB(getPhaseColor(phase));
     doc.setFillColor(color.r, color.g, color.b);
     doc.rect(20, y, Math.max(pct * 100, 1), 5, 'F');
     doc.setTextColor(200, 200, 200);

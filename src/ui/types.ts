@@ -1,13 +1,9 @@
 // Core domain types + constants for Project Tracker
 
-export type Phase =
-  | 'Research'
-  | 'Ideation'
-  | 'Wireframe'
-  | 'Prototype'
-  | 'Design'
-  | 'Review'
-  | 'Handoff';
+// Phases are free-form strings: PHASES lists the built-in defaults, but users
+// can add their own (stored in AppState.customPhases). Colors for custom
+// phases are derived deterministically — see helpers.ts getPhaseColor().
+export type Phase = string;
 
 export const PHASES: Phase[] = [
   'Research',
@@ -19,7 +15,7 @@ export const PHASES: Phase[] = [
   'Handoff',
 ];
 
-export const PHASE_COLORS: Record<Phase, string> = {
+export const PHASE_COLORS: Record<string, string> = {
   Research: '#7B61FF',
   Ideation: '#FF6B6B',
   Wireframe: '#FFB347',
@@ -51,6 +47,12 @@ export type Session = {
   fileId: string;
   fileName: string;
   idlePaused?: boolean;
+  // Manual pause via the Pause button, distinct from idle auto-pause.
+  manualPaused?: boolean;
+  manualPauseStartedAt?: number;
+  // Snapshot of settings.userName at session start — identifies who logged
+  // the session when a file is shared between multiple people.
+  user?: string;
 };
 
 export type Project = {
@@ -64,6 +66,9 @@ export type Project = {
 export type AppSettings = {
   idleThreshold: number;
   workDayHours: number;
+  lang: string;
+  // Optional — shown on sessions so a shared file can tell who tracked what.
+  userName: string;
 };
 
 export type AppState = {
@@ -71,8 +76,15 @@ export type AppState = {
   sessions: Session[];
   activeSession: Session | null;
   settings: AppSettings;
+  // Map of Figma fileId → projectId. Lets the plugin auto-select the
+  // project the user last tracked in this file when reopening it.
+  fileProjectMap: Record<string, string>;
+  // User-added phases, on top of the PHASES defaults.
+  customPhases: Phase[];
 };
 
 export type ViewName = 'timer' | 'report' | 'projects' | 'settings';
+
+export type Granularity = 'day' | 'week' | 'month' | 'year';
 
 export const STORAGE_KEY = 'ux_tracker_state';

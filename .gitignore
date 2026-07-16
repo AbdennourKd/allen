@@ -1,3 +1,6 @@
 node_modules/
 dist/
+dist-chrome/
 .claude/
+*.png
+!marketing/**/*.png
