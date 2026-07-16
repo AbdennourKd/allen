@@ -1,4 +1,4 @@
-# LinkedIn Drip Plan: Project Tracker
+# LinkedIn Drip Plan: Allen
 
 4 posts étalés sur ~2 semaines. Hook, launch, différenciateur, tuto actionnable.
 
@@ -49,7 +49,7 @@
 
 > C'est en ligne.
 >
-> **Project Tracker**, un plugin Figma pour les designers UX qui veulent tracker leur temps **par phase**, sans quitter Figma.
+> **Allen**, un plugin Figma pour les designers UX qui veulent tracker leur temps **par phase**, sans quitter Figma.
 >
 > Ce qu'il fait :
 > → Timer par projet × phase (Research, Ideation, Wireframe, Prototype, Design, Review, Handoff, et tu peux ajouter tes propres phases)
@@ -85,7 +85,7 @@
 >
 > Là tu vois où tu *overshoot*. Tu vois que tu sous-estimes systématiquement la Research. Tu ajustes ton chiffrage. Tu deviens plus rentable au projet d'après.
 >
-> C'est pour ça que Project Tracker oblige à choisir une phase à chaque démarrage de timer. Pas optionnel. Parce que sans ça, c'est juste un chronomètre.
+> C'est pour ça qu'Allen oblige à choisir une phase à chaque démarrage de timer. Pas optionnel. Parce que sans ça, c'est juste un chronomètre.
 >
 > Et l'honnêteté du temps compte autant que sa précision. J'ai déjà facturé un client pour 3h "de design" pendant lesquelles j'étais en réunion sur un AUTRE projet : j'avais oublié d'arrêter le timer en switchant. Maintenant le plugin le fait pour moi. Après 5 min d'inactivité, il se met en pause automatiquement. Et si je sais que je pars, je le mets en pause moi-même.
 >
@@ -101,7 +101,7 @@
 
 > Comment passer de 0 à un rapport détaillé en 3 minutes.
 >
-> 1. **Installe Project Tracker** depuis Figma Community : [LIEN]
+> 1. **Installe Allen** depuis Figma Community : [LIEN]
 > 2. **Ouvre n'importe quel fichier**, lance le plugin. Il retrouve tout seul le bon projet si tu l'as déjà utilisé sur ce fichier.
 > 3. **Crée tes projets** dans l'onglet "Projets" (un click, pick une couleur)
 > 4. **Onglet Timer** → choisis projet + phase (ou ajoute la tienne) → ▶ Start

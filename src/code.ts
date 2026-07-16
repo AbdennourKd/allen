@@ -5,7 +5,7 @@ const FULL_H = 580;
 const MINI_W = 220;
 const MINI_H = 64;
 
-figma.showUI(__html__, { width: FULL_W, height: FULL_H, title: 'Project Tracker' });
+figma.showUI(__html__, { width: FULL_W, height: FULL_H, title: 'Allen' });
 
 figma.ui.postMessage({
   type: 'INIT',

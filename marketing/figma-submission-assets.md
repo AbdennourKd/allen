@@ -82,7 +82,7 @@ Recommandation : option 1, la plus accrocheuse.
 À copier dans le champ Description sur Figma Community.
 
 ```
-Project Tracker is a time tracker built for UX designers, by a UX designer.
+Allen is a time tracker built for UX designers, by a UX designer.
 
 Most time trackers give you one timer and one project. A real design project is Research, Ideation, Wireframes, Prototyping, Design, Review, Handoff. They overlap constantly unless you track them separately. This plugin tracks project × phase, so you know exactly where your hours go.
 
@@ -145,4 +145,4 @@ Recommandation :
 - [ ] Plugin testé une dernière fois en local : démarrer, stopper, exporter, switch langue
 - [ ] manifest.json a la version finale (vérifier le `name` et le `reasoning` du networkAccess)
 
-Une fois tout coché : Figma Desktop, Plugins, Manage plugins, Project Tracker, Publish.
+Une fois tout coché : Figma Desktop, Plugins, Manage plugins, Allen, Publish.

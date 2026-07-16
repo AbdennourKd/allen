@@ -1,4 +1,4 @@
-// Core domain types + constants for Project Tracker
+// Core domain types + constants for Allen
 
 // Phases are free-form strings: PHASES lists the built-in defaults, but users
 // can add their own (stored in AppState.customPhases). Colors for custom
