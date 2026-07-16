@@ -15,19 +15,26 @@ export type IdleCallbacks = {
 };
 
 export function initIdleListeners(
-  state: AppState,
+  getState: () => AppState,
   callbacks: IdleCallbacks
 ): void {
   if (listenersAttached) return;
   listenersAttached = true;
 
+  // Throttle: mousemove can fire hundreds of times per second. Coalesce
+  // activity signals into 250 ms buckets so we only touch the idle timer
+  // a few times per second at most.
   const handler = () => {
-    lastActivityAt = Date.now();
-    // If session is paused due to idle, auto-resume on activity
+    const now = Date.now();
+    if (now - lastActivityAt < 250) return;
+    lastActivityAt = now;
+
+    // Resolve state lazily so listeners track the current state object
+    // even after Clear Data swaps the reference.
+    const state = getState();
     if (state.activeSession?.idlePaused) {
       resumeFromIdle(state, callbacks.onResume);
     }
-    // Always reset the idle timer if a session is running
     if (state.activeSession) {
       resetIdleTimer(state, callbacks.onIdle);
     }
@@ -46,7 +53,7 @@ export function initIdleListeners(
 
 export function resetIdleTimer(state: AppState, onIdle: () => void): void {
   clearIdleTimer();
-  if (!state.activeSession || state.activeSession.idlePaused) return;
+  if (!state.activeSession || state.activeSession.idlePaused || state.activeSession.manualPaused) return;
   const thresholdMs = state.settings.idleThreshold * 1000;
   idleTimeout = window.setTimeout(() => {
     if (!state.activeSession) return;

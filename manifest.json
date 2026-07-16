@@ -1,12 +1,16 @@
 {
-  "name": "Project Tracker",
+  "name": "Project Tracker — UX Time Tracking",
   "id": "ux-project-tracker",
   "api": "1.0.0",
   "main": "dist/code.js",
   "ui": "dist/ui.html",
   "editorType": ["figma"],
   "networkAccess": {
-    "allowedDomains": ["https://cdnjs.cloudflare.com"],
-    "reasoning": "Loads jsPDF library for PDF export of weekly reports"
+    "allowedDomains": [
+      "https://cdnjs.cloudflare.com",
+      "https://fonts.googleapis.com",
+      "https://fonts.gstatic.com"
+    ],
+    "reasoning": "cdnjs.cloudflare.com is used to lazy-load the jsPDF library on demand, only when the user clicks 'Export PDF' in the report view. fonts.googleapis.com and fonts.gstatic.com are used to load the Material Symbols Outlined icon font that styles the plugin UI. No user data, session content, or project information is ever sent to any external service. All data is stored locally in the plugin's UI iframe via window.localStorage."
   }
 }
