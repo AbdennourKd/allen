@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Project Tracker</title>
-  <meta name="description" content="Time tracking built for UX/UI designers. Track by project, by phase. Figma plugin & Chrome extension." />
-  <meta property="og:title" content="Project Tracker" />
-  <meta property="og:description" content="Time tracking built for UX/UI designers." />
+  <title>Allen</title>
+  <meta name="description" content="Time tracking built for UX/UI designers. Track by project, by phase, right inside Figma." />
+  <meta property="og:title" content="Allen" />
+  <meta property="og:description" content="Time tracking built for UX/UI designers, right inside Figma." />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='none' stroke='%230d99ff' stroke-width='6'/><line x1='50' y1='50' x2='50' y2='22' stroke='%230d99ff' stroke-width='5' stroke-linecap='round'/><line x1='50' y1='50' x2='70' y2='58' stroke='%230d99ff' stroke-width='4' stroke-linecap='round'/><circle cx='50' cy='50' r='4' fill='%230d99ff'/></svg>" />
@@ -287,28 +287,6 @@
     .step-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
     .step-card p { font-size: 13px; color: var(--text-2); line-height: 1.6; max-width: 220px; margin: 0 auto; }
 
-    /* ---- PLATFORMS ---- */
-    .plat-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
-      max-width: 600px; margin: 48px auto 0;
-    }
-    .plat-card {
-      padding: 32px; border: 1px solid var(--border-2);
-      border-radius: var(--radius); text-align: center;
-      position: relative; transition: border-color 0.3s, background 0.3s;
-    }
-    .plat-card:hover { border-color: var(--accent); background: var(--accent-soft); }
-    .plat-icon { margin-bottom: 16px; display: block; }
-    .plat-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-    .plat-card p { font-size: 12px; color: var(--text-3); }
-    .plat-badge {
-      position: absolute; top: 12px; right: 12px;
-      padding: 3px 9px; border-radius: 6px; font-size: 10px;
-      font-weight: 600; background: var(--violet-soft);
-      color: var(--violet); letter-spacing: 0.3px;
-    }
-    [dir="rtl"] .plat-badge { right: auto; left: 12px; }
-
     /* ---- FOOTER ---- */
     .footer {
       padding: 80px 0 36px; text-align: center;
@@ -356,7 +334,6 @@
         border-radius: var(--radius);
       }
       .steps-row { grid-template-columns: 1fr; gap: 20px; }
-      .plat-grid { grid-template-columns: 1fr; max-width: 300px; }
       .form-row { flex-direction: column; }
       .form-btn { width: 100%; }
       section { padding: 80px 0; }
@@ -379,7 +356,7 @@
         <line x1="50" y1="50" x2="68" y2="56" stroke="#3b82f6" stroke-width="4" stroke-linecap="round"/>
         <circle cx="50" cy="50" r="4" fill="#3b82f6"/>
       </svg>
-      <span data-i18n="nav_logo">Project Tracker</span>
+      <span data-i18n="nav_logo">Allen</span>
     </a>
     <div class="lang-switcher">
       <button class="lang-btn active" data-lang="en">EN</button>
@@ -402,7 +379,7 @@
             <span data-i18n="hero_tag">Beta opening soon</span>
           </div>
           <h1 class="hero-h1 reveal reveal-d1" data-i18n="hero_h1">Know where your <em>design time</em> actually goes.</h1>
-          <p class="hero-p reveal reveal-d2" data-i18n="hero_p">Stop guessing. Project Tracker logs every session by project and phase &mdash; Research, Wireframe, Design, Handoff &mdash; so you can bill accurately and work smarter.</p>
+          <p class="hero-p reveal reveal-d2" data-i18n="hero_p">Stop guessing. Allen logs every session by project and phase: Research, Wireframe, Design, Handoff, so you can bill accurately and work smarter.</p>
           <form class="form-row reveal reveal-d3" id="form-hero" aria-label="Waitlist">
             <input class="form-input" type="email" data-i18n-placeholder="form_placeholder" placeholder="name@studio.com" required aria-label="Email" />
             <button class="form-btn" type="submit" data-i18n="form_btn">Get early access</button>
@@ -454,17 +431,17 @@
         <div class="feat-item reveal reveal-d1">
           <div class="feat-num">01</div>
           <h3 data-i18n="feat_1_title">Phase-level clarity</h3>
-          <p data-i18n="feat_1_desc">Every session is tagged with a design phase. See exactly how much time goes to Research vs. Wireframe vs. Handoff.</p>
+          <p data-i18n="feat_1_desc">Every session is tagged with a phase: Research, Wireframe, Design, Handoff, or your own custom ones. See exactly where the time goes.</p>
         </div>
         <div class="feat-item reveal reveal-d2">
           <div class="feat-num">02</div>
-          <h3 data-i18n="feat_2_title">Idle-aware</h3>
-          <p data-i18n="feat_2_desc">Grabbed coffee? The timer pauses itself after inactivity. When you come back, it picks up. No phantom hours.</p>
+          <h3 data-i18n="feat_2_title">Pause your way</h3>
+          <p data-i18n="feat_2_desc">Grabbed coffee? The timer pauses itself after inactivity. Need a break mid-task? Pause it yourself. No phantom hours, no guilt.</p>
         </div>
         <div class="feat-item reveal reveal-d3">
           <div class="feat-num">03</div>
-          <h3 data-i18n="feat_3_title">Weekly snapshots</h3>
-          <p data-i18n="feat_3_desc">See your week broken down by phase and day. Export as CSV or PDF for your team, your client, or yourself.</p>
+          <h3 data-i18n="feat_3_title">Reports, your way</h3>
+          <p data-i18n="feat_3_desc">Day, week, month, or year: see the breakdown by phase and by project. Export as CSV or PDF whenever you need it.</p>
         </div>
       </div>
     </div>
@@ -491,34 +468,8 @@
         </div>
         <div class="step-card reveal reveal-d3">
           <div class="step-ring">3</div>
-          <h3 data-i18n="step_3_title">Review the week</h3>
+          <h3 data-i18n="step_3_title">Review anytime</h3>
           <p data-i18n="step_3_desc">Open your report. See patterns. Export in one click.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PLATFORMS -->
-  <section id="platforms">
-    <div class="wrap" style="text-align:center">
-      <p class="sec-overline reveal" data-i18n="plat_overline">Integrations</p>
-      <h2 class="sec-heading reveal" data-i18n="plat_heading">Works where you work.</h2>
-      <div class="plat-grid">
-        <div class="plat-card reveal reveal-d1">
-          <span class="plat-badge" data-i18n="plat_badge">Soon</span>
-          <span class="plat-icon">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none"><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5Z" fill="#F24E1E"/><path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2Z" fill="#FF7262"/><path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0Z" fill="#1ABCFE"/><path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0Z" fill="#0ACF83"/><path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5Z" fill="#A259FF"/></svg>
-          </span>
-          <h3 data-i18n="plat_figma">Figma Plugin</h3>
-          <p data-i18n="plat_figma_desc">Track time inside your canvas.</p>
-        </div>
-        <div class="plat-card reveal reveal-d2">
-          <span class="plat-badge" data-i18n="plat_badge">Soon</span>
-          <span class="plat-icon">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#fff"/><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm5.6 7h-2.5c-.27-1.04-.7-2.03-1.27-2.93A8.04 8.04 0 0 1 17.6 9ZM12 4.04c.8 1.05 1.42 2.24 1.82 3.46h-3.64c.4-1.22 1.02-2.41 1.82-3.46ZM4.26 14a7.82 7.82 0 0 1 0-4H7.2c-.1.66-.17 1.32-.17 2s.07 1.34.17 2H4.26ZM6.4 16h2.5c.27 1.04.7 2.03 1.27 2.93A8.04 8.04 0 0 1 6.4 16Zm2.5-8H6.4a8.04 8.04 0 0 1 3.77-2.93C9.6 6.03 9.17 6.96 8.9 8ZM12 20.96c-.8-1.05-1.42-2.24-1.82-3.46h3.64c-.4 1.22-1.02 2.41-1.82 3.46ZM14.18 14H9.82c-.12-.66-.2-1.32-.2-2s.08-1.34.2-2h4.36c.12.66.2 1.32.2 2s-.08 1.34-.2 2Zm.3 4.93c.57-.9 1-1.89 1.27-2.93h2.5a8.04 8.04 0 0 1-3.77 2.93ZM16.8 14c.1-.66.17-1.32.17-2s-.07-1.34-.17-2h2.94a7.82 7.82 0 0 1 0 4H16.8Z" fill="#4285F4"/></svg>
-          </span>
-          <h3 data-i18n="plat_chrome">Chrome Extension</h3>
-          <p data-i18n="plat_chrome_desc">Track time in any browser tab.</p>
         </div>
       </div>
     </div>
@@ -533,10 +484,10 @@
         <button class="form-btn" type="submit" data-i18n="form_btn">Get early access</button>
       </form>
       <div class="footer-links">
-        <a href="https://github.com/AbdennourKd/project-tracker" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/AbdennourKd/allen" target="_blank" rel="noopener">GitHub</a>
         <a href="https://x.com" target="_blank" rel="noopener">X</a>
       </div>
-      <p class="footer-copy">&copy; 2026 Project Tracker</p>
+      <p class="footer-copy">&copy; 2026 Allen</p>
     </div>
   </footer>
 
@@ -544,10 +495,10 @@
     // ---- i18n ----
     const T = {
       en: {
-        nav_logo: 'Project Tracker',
+        nav_logo: 'Allen',
         hero_tag: 'Beta opening soon',
         hero_h1: 'Know where your <em>design time</em> actually goes.',
-        hero_p: 'Stop guessing. Project Tracker logs every session by project and phase \u2014 Research, Wireframe, Design, Handoff \u2014 so you can bill accurately and work smarter.',
+        hero_p: 'Stop guessing. Allen logs every session by project and phase: Research, Wireframe, Design, Handoff, so you can bill accurately and work smarter.',
         form_placeholder: 'name@studio.com',
         form_btn: 'Get early access',
         form_fine: 'Free while in beta. No card needed.',
@@ -557,11 +508,11 @@
         feat_heading: 'Designers track pixels.<br>Not hours. Until now.',
         feat_sub: 'Most time-tracking tools were built for developers or managers. This one was built for the way designers actually work.',
         feat_1_title: 'Phase-level clarity',
-        feat_1_desc: 'Every session is tagged with a design phase. See exactly how much time goes to Research vs. Wireframe vs. Handoff.',
-        feat_2_title: 'Idle-aware',
-        feat_2_desc: 'Grabbed coffee? The timer pauses itself after inactivity. When you come back, it picks up. No phantom hours.',
-        feat_3_title: 'Weekly snapshots',
-        feat_3_desc: 'See your week broken down by phase and day. Export as CSV or PDF for your team, your client, or yourself.',
+        feat_1_desc: 'Every session is tagged with a phase: Research, Wireframe, Design, Handoff, or your own custom ones. See exactly where the time goes.',
+        feat_2_title: 'Pause your way',
+        feat_2_desc: 'Grabbed coffee? The timer pauses itself after inactivity. Need a break mid-task? Pause it yourself. No phantom hours, no guilt.',
+        feat_3_title: 'Reports, your way',
+        feat_3_desc: 'Day, week, month, or year: see the breakdown by phase and by project. Export as CSV or PDF whenever you need it.',
         steps_overline: 'How it works',
         steps_heading: 'Start. Work. Done.',
         steps_sub: 'No onboarding, no setup wizard. Just open it and go.',
@@ -569,22 +520,15 @@
         step_1_desc: 'Select what you\u2019re working on. Takes two clicks.',
         step_2_title: 'Press start',
         step_2_desc: 'Timer runs in the background. Idle detection handles the rest.',
-        step_3_title: 'Review the week',
+        step_3_title: 'Review anytime',
         step_3_desc: 'Open your report. See patterns. Export in one click.',
-        plat_overline: 'Integrations',
-        plat_heading: 'Works where you work.',
-        plat_badge: 'Soon',
-        plat_figma: 'Figma Plugin',
-        plat_figma_desc: 'Track time inside your canvas.',
-        plat_chrome: 'Chrome Extension',
-        plat_chrome_desc: 'Track time in any browser tab.',
         footer_big: 'Stop guessing.<br>Start tracking.',
       },
       fr: {
-        nav_logo: 'Project Tracker',
+        nav_logo: 'Allen',
         hero_tag: 'B\u00eata bient\u00f4t disponible',
         hero_h1: 'Savez-vous o\u00f9 passe votre <em>temps de design</em>\u202f?',
-        hero_p: 'Arr\u00eatez de deviner. Project Tracker enregistre chaque session par projet et par phase \u2014 Recherche, Wireframe, Design, Handoff \u2014 pour facturer juste et travailler mieux.',
+        hero_p: 'Arr\u00eatez de deviner. Allen enregistre chaque session par projet et par phase : Recherche, Wireframe, Design, Handoff, pour facturer juste et travailler mieux.',
         form_placeholder: 'nom@studio.com',
         form_btn: 'Acc\u00e8s anticipé',
         form_fine: 'Gratuit pendant la b\u00eata. Sans carte.',
@@ -594,11 +538,11 @@
         feat_heading: 'Les designers comptent les pixels.<br>Pas les heures. Jusqu\u2019ici.',
         feat_sub: 'La plupart des outils de suivi du temps sont con\u00e7us pour les devs ou les managers. Celui-ci est pens\u00e9 pour la fa\u00e7on dont les designers travaillent vraiment.',
         feat_1_title: 'Clart\u00e9 par phase',
-        feat_1_desc: 'Chaque session est tagg\u00e9e avec une phase. Voyez exactement combien de temps va \u00e0 la Recherche, au Wireframe ou au Handoff.',
-        feat_2_title: 'D\u00e9tection d\u2019inactivit\u00e9',
-        feat_2_desc: 'Parti chercher un caf\u00e9\u202f? Le timer se met en pause. Quand vous revenez, il reprend. Z\u00e9ro heure fant\u00f4me.',
-        feat_3_title: 'Rapports hebdo',
-        feat_3_desc: 'Visualisez votre semaine par phase et par jour. Exportez en CSV ou PDF pour votre \u00e9quipe ou vos clients.',
+        feat_1_desc: 'Chaque session est tagg\u00e9e avec une phase : Recherche, Wireframe, Design, Handoff, ou tes propres phases personnalis\u00e9es. Voyez exactement o\u00f9 va le temps.',
+        feat_2_title: 'Pause \u00e0 ta fa\u00e7on',
+        feat_2_desc: 'Parti chercher un caf\u00e9\u202f? Le timer se met en pause automatiquement. Besoin d\u2019une pause en pleine t\u00e2che\u202f? Mets-le en pause toi-m\u00eame. Z\u00e9ro heure fant\u00f4me.',
+        feat_3_title: 'Rapports \u00e0 ta fa\u00e7on',
+        feat_3_desc: 'Jour, semaine, mois ou ann\u00e9e : visualisez la r\u00e9partition par phase et par projet. Exportez en CSV ou PDF quand vous voulez.',
         steps_overline: 'Comment \u00e7a marche',
         steps_heading: 'Start. Bossez. Fini.',
         steps_sub: 'Pas d\u2019onboarding, pas d\u2019assistant. Ouvrez et c\u2019est parti.',
@@ -606,22 +550,15 @@
         step_1_desc: 'S\u00e9lectionnez ce sur quoi vous travaillez. Deux clics.',
         step_2_title: 'Appuyez sur Start',
         step_2_desc: 'Le timer tourne en arri\u00e8re-plan. La d\u00e9tection d\u2019inactivit\u00e9 g\u00e8re le reste.',
-        step_3_title: 'Consultez la semaine',
+        step_3_title: 'Consultez quand vous voulez',
         step_3_desc: 'Ouvrez votre rapport. Rep\u00e9rez les tendances. Exportez en un clic.',
-        plat_overline: 'Int\u00e9grations',
-        plat_heading: 'L\u00e0 o\u00f9 vous travaillez d\u00e9j\u00e0.',
-        plat_badge: 'Bient\u00f4t',
-        plat_figma: 'Plugin Figma',
-        plat_figma_desc: 'Suivez le temps sans quitter votre canvas.',
-        plat_chrome: 'Extension Chrome',
-        plat_chrome_desc: 'Suivez le temps dans n\u2019importe quel onglet.',
         footer_big: 'Arr\u00eatez de deviner.<br>Commencez \u00e0 tracker.',
       },
       ar: {
-        nav_logo: 'Project Tracker',
+        nav_logo: 'Allen',
         hero_tag: '\u0627\u0644\u0646\u0633\u062e\u0629 \u0627\u0644\u062a\u062c\u0631\u064a\u0628\u064a\u0629 \u0642\u0631\u064a\u0628\u0627\u064b',
         hero_h1: '\u0627\u0639\u0631\u0641 \u0623\u064a\u0646 \u064a\u0630\u0647\u0628 <em>\u0648\u0642\u062a \u0627\u0644\u062a\u0635\u0645\u064a\u0645</em> \u0641\u0639\u0644\u0627\u064b.',
-        hero_p: '\u062a\u0648\u0642\u0641 \u0639\u0646 \u0627\u0644\u062a\u062e\u0645\u064a\u0646. Project Tracker \u064a\u0633\u062c\u0651\u0644 \u0643\u0644 \u062c\u0644\u0633\u0629 \u062d\u0633\u0628 \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0648\u0627\u0644\u0645\u0631\u062d\u0644\u0629 \u2014 \u0628\u062d\u062b\u060c Wireframe\u060c \u062a\u0635\u0645\u064a\u0645\u060c Handoff \u2014 \u0644\u062a\u0641\u0648\u062a\u0631 \u0628\u062f\u0642\u0629 \u0648\u062a\u0639\u0645\u0644 \u0628\u0630\u0643\u0627\u0621.',
+        hero_p: '\u062a\u0648\u0642\u0641 \u0639\u0646 \u0627\u0644\u062a\u062e\u0645\u064a\u0646. Allen \u064a\u0633\u062c\u0651\u0644 \u0643\u0644 \u062c\u0644\u0633\u0629 \u062d\u0633\u0628 \u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0648\u0627\u0644\u0645\u0631\u062d\u0644\u0629: \u0628\u062d\u062b\u060c Wireframe\u060c \u062a\u0635\u0645\u064a\u0645\u060c Handoff\u060c \u0644\u062a\u0641\u0648\u062a\u0631 \u0628\u062f\u0642\u0629 \u0648\u062a\u0639\u0645\u0644 \u0628\u0630\u0643\u0627\u0621.',
         form_placeholder: 'name@studio.com',
         form_btn: '\u0627\u062d\u0635\u0644 \u0639\u0644\u0649 \u0648\u0635\u0648\u0644 \u0645\u0628\u0643\u0631',
         form_fine: '\u0645\u062c\u0627\u0646\u064a \u062e\u0644\u0627\u0644 \u0627\u0644\u0628\u064a\u062a\u0627. \u0628\u062f\u0648\u0646 \u0628\u0637\u0627\u0642\u0629.',
@@ -631,11 +568,11 @@
         feat_heading: '\u0627\u0644\u0645\u0635\u0645\u0645\u0648\u0646 \u064a\u062a\u062a\u0628\u0639\u0648\u0646 \u0627\u0644\u0628\u0643\u0633\u0644\u0627\u062a.<br>\u0644\u064a\u0633 \u0627\u0644\u0633\u0627\u0639\u0627\u062a. \u062d\u062a\u0649 \u0627\u0644\u0622\u0646.',
         feat_sub: '\u0645\u0639\u0638\u0645 \u0623\u062f\u0648\u0627\u062a \u062a\u062a\u0628\u0639 \u0627\u0644\u0648\u0642\u062a \u0635\u064f\u0645\u0645\u062a \u0644\u0644\u0645\u0637\u0648\u0631\u064a\u0646. \u0647\u0630\u0647 \u0635\u064f\u0645\u0645\u062a \u0644\u0637\u0631\u064a\u0642\u0629 \u0639\u0645\u0644 \u0627\u0644\u0645\u0635\u0645\u0645\u064a\u0646 \u0641\u0639\u0644\u0627\u064b.',
         feat_1_title: '\u0648\u0636\u0648\u062d \u0639\u0644\u0649 \u0645\u0633\u062a\u0648\u0649 \u0627\u0644\u0645\u0631\u062d\u0644\u0629',
-        feat_1_desc: '\u0643\u0644 \u062c\u0644\u0633\u0629 \u0645\u0648\u0633\u0648\u0645\u0629 \u0628\u0645\u0631\u062d\u0644\u0629 \u062a\u0635\u0645\u064a\u0645. \u0634\u0627\u0647\u062f \u0628\u0627\u0644\u0636\u0628\u0637 \u0643\u0645 \u0645\u0646 \u0627\u0644\u0648\u0642\u062a \u064a\u0630\u0647\u0628 \u0644\u0644\u0628\u062d\u062b \u0645\u0642\u0627\u0628\u0644 Wireframe \u0645\u0642\u0627\u0628\u0644 Handoff.',
-        feat_2_title: '\u0630\u0643\u064a \u0645\u0639 \u0627\u0644\u062e\u0645\u0648\u0644',
-        feat_2_desc: '\u0630\u0647\u0628\u062a \u0644\u0625\u062d\u0636\u0627\u0631 \u0642\u0647\u0648\u0629\u061f \u0627\u0644\u0645\u0624\u0642\u062a \u064a\u062a\u0648\u0642\u0641 \u062a\u0644\u0642\u0627\u0626\u064a\u0627\u064b. \u0639\u0646\u062f \u0639\u0648\u062f\u062a\u0643 \u064a\u0633\u062a\u0623\u0646\u0641. \u0628\u062f\u0648\u0646 \u0633\u0627\u0639\u0627\u062a \u0648\u0647\u0645\u064a\u0629.',
-        feat_3_title: '\u062a\u0642\u0627\u0631\u064a\u0631 \u0623\u0633\u0628\u0648\u0639\u064a\u0629',
-        feat_3_desc: '\u0634\u0627\u0647\u062f \u0623\u0633\u0628\u0648\u0639\u0643 \u0645\u0642\u0633\u0645\u0627\u064b \u062d\u0633\u0628 \u0627\u0644\u0645\u0631\u062d\u0644\u0629 \u0648\u0627\u0644\u064a\u0648\u0645. \u0635\u062f\u0651\u0631 \u0643\u0640 CSV \u0623\u0648 PDF \u0644\u0641\u0631\u064a\u0642\u0643.',
+        feat_1_desc: '\u0643\u0644 \u062c\u0644\u0633\u0629 \u0645\u0648\u0633\u0648\u0645\u0629 \u0628\u0645\u0631\u062d\u0644\u0629: \u0628\u062d\u062b\u060c Wireframe\u060c \u062a\u0635\u0645\u064a\u0645\u060c Handoff\u060c \u0623\u0648 \u0645\u0631\u0627\u062d\u0644\u0643 \u0627\u0644\u062e\u0627\u0635\u0629. \u0634\u0627\u0647\u062f \u0628\u0627\u0644\u0636\u0628\u0637 \u0625\u0644\u0649 \u0623\u064a\u0646 \u064a\u0630\u0647\u0628 \u0627\u0644\u0648\u0642\u062a.',
+        feat_2_title: '\u0623\u0648\u0642\u0641 \u0645\u0624\u0642\u062a\u0627\u064b \u0628\u0637\u0631\u064a\u0642\u062a\u0643',
+        feat_2_desc: '\u0630\u0647\u0628\u062a \u0644\u0625\u062d\u0636\u0627\u0631 \u0642\u0647\u0648\u0629\u061f \u0627\u0644\u0645\u0624\u0642\u062a \u064a\u062a\u0648\u0642\u0641 \u062a\u0644\u0642\u0627\u0626\u064a\u0627\u064b. \u062a\u062d\u062a\u0627\u062c \u0627\u0633\u062a\u0631\u0627\u062d\u0629 \u0641\u064a \u0645\u0646\u062a\u0635\u0641 \u0627\u0644\u0645\u0647\u0645\u0629\u061f \u0623\u0648\u0642\u0641\u0647 \u0628\u0646\u0641\u0633\u0643. \u0628\u062f\u0648\u0646 \u0633\u0627\u0639\u0627\u062a \u0648\u0647\u0645\u064a\u0629.',
+        feat_3_title: '\u062a\u0642\u0627\u0631\u064a\u0631 \u0628\u0637\u0631\u064a\u0642\u062a\u0643',
+        feat_3_desc: '\u064a\u0648\u0645\u060c \u0623\u0633\u0628\u0648\u0639\u060c \u0634\u0647\u0631 \u0623\u0648 \u0633\u0646\u0629: \u0634\u0627\u0647\u062f \u0627\u0644\u062a\u0648\u0632\u064a\u0639 \u062d\u0633\u0628 \u0627\u0644\u0645\u0631\u062d\u0644\u0629 \u0648\u0627\u0644\u0645\u0634\u0631\u0648\u0639. \u0635\u062f\u0651\u0631 \u0643\u0640 CSV \u0623\u0648 PDF \u0645\u062a\u0649 \u0623\u0631\u062f\u062a.',
         steps_overline: '\u0643\u064a\u0641 \u064a\u0639\u0645\u0644',
         steps_heading: '\u0627\u0628\u062f\u0623. \u0627\u0634\u062a\u063a\u0644. \u062e\u0644\u0635.',
         steps_sub: '\u0628\u062f\u0648\u0646 \u0625\u0639\u062f\u0627\u062f\u0627\u062a. \u0628\u062f\u0648\u0646 \u0645\u0639\u0627\u0644\u062c. \u0627\u0641\u062a\u062d \u0648\u0627\u0628\u062f\u0623.',
@@ -643,15 +580,8 @@
         step_1_desc: '\u062d\u062f\u062f \u0645\u0627 \u062a\u0639\u0645\u0644 \u0639\u0644\u064a\u0647. \u0646\u0642\u0631\u062a\u0627\u0646 \u0641\u0642\u0637.',
         step_2_title: '\u0627\u0636\u063a\u0637 Start',
         step_2_desc: '\u0627\u0644\u0645\u0624\u0642\u062a \u064a\u0639\u0645\u0644 \u0641\u064a \u0627\u0644\u062e\u0644\u0641\u064a\u0629. \u0643\u0634\u0641 \u0627\u0644\u062e\u0645\u0648\u0644 \u064a\u062a\u0643\u0641\u0644 \u0628\u0627\u0644\u0628\u0627\u0642\u064a.',
-        step_3_title: '\u0631\u0627\u062c\u0639 \u0627\u0644\u0623\u0633\u0628\u0648\u0639',
+        step_3_title: '\u0631\u0627\u062c\u0639 \u0641\u064a \u0623\u064a \u0648\u0642\u062a',
         step_3_desc: '\u0627\u0641\u062a\u062d \u062a\u0642\u0631\u064a\u0631\u0643. \u0644\u0627\u062d\u0638 \u0627\u0644\u0623\u0646\u0645\u0627\u0637. \u0635\u062f\u0651\u0631 \u0628\u0646\u0642\u0631\u0629.',
-        plat_overline: '\u0627\u0644\u062a\u0643\u0627\u0645\u0644\u0627\u062a',
-        plat_heading: '\u064a\u0639\u0645\u0644 \u062d\u064a\u062b \u062a\u0639\u0645\u0644.',
-        plat_badge: '\u0642\u0631\u064a\u0628\u0627\u064b',
-        plat_figma: '\u0625\u0636\u0627\u0641\u0629 Figma',
-        plat_figma_desc: '\u062a\u062a\u0628\u0639 \u0627\u0644\u0648\u0642\u062a \u062f\u0627\u062e\u0644 \u0627\u0644\u0644\u0648\u062d\u0629.',
-        plat_chrome: '\u0625\u0636\u0627\u0641\u0629 Chrome',
-        plat_chrome_desc: '\u062a\u062a\u0628\u0639 \u0627\u0644\u0648\u0642\u062a \u0641\u064a \u0623\u064a \u062a\u0628\u0648\u064a\u0628.',
         footer_big: '\u062a\u0648\u0642\u0641 \u0639\u0646 \u0627\u0644\u062a\u062e\u0645\u064a\u0646.<br>\u0627\u0628\u062f\u0623 \u0627\u0644\u062a\u062a\u0628\u0639.',
       }
     };
