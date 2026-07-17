@@ -300,11 +300,9 @@ input, select, textarea {
 
 .field-label {
   display: block;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--text-secondary);
   margin-bottom: 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
   font-weight: 600;
 }
 
@@ -612,10 +610,8 @@ input, select, textarea {
 
 /* ---------- Section titles ---------- */
 .section-title {
-  font-size: 10px;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  font-size: 13px;
+  color: var(--text-primary);
   margin-bottom: 10px;
   margin-top: 20px;
   font-weight: 700;
@@ -669,8 +665,13 @@ input, select, textarea {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 11px;
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.segmented-legend-duration {
   color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
 }
 
 .segmented-legend-item .phase-dot {
@@ -1153,10 +1154,8 @@ input, select, textarea {
 }
 
 .new-project-form-title {
-  font-size: 11px;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-size: 13px;
+  color: var(--text-primary);
   font-weight: 700;
   margin-bottom: 10px;
 }

@@ -442,7 +442,8 @@ function renderTodayBreakdown(state: AppState): string {
           (b) => `
         <span class="segmented-legend-item">
           <span class="phase-dot" style="background:${getPhaseColor(b.phase)}"></span>
-          ${escapeHtml(b.phase)} · ${formatDuration(b.duration)}
+          ${escapeHtml(b.phase)}
+          <span class="segmented-legend-duration">${formatDuration(b.duration)}</span>
         </span>
       `
         )
