@@ -138,23 +138,33 @@ export function updateTimerDisplay(state: AppState): void {
 // HTML BUILDERS
 // ================================================================
 
+const SIDEBAR_LOGO_SVG = `
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 12C4 7 8 4.5 12 4.5S20 7 22 12C20 17 16 19.5 12 19.5S4 17 2 12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+    <circle cx="12" cy="12" r="3.2" fill="currentColor"/>
+  </svg>
+`;
+
 function buildHTML(state: AppState, rs: RenderState): string {
   const dir = isRTL() ? 'rtl' : 'ltr';
   if (rs.isMinimized) {
     return renderMiniBar(state, dir);
   }
+  const sectionTitle = rs.view === 'timer' ? t('session_title') : t(`nav_${rs.view}`);
   return `
-    <div class="header" dir="${dir}">
-      <span class="header-title">${t('header_title')}</span>
-      ${state.activeSession ? `<span class="header-sub">${t('header_running')}</span>` : ''}
-      <button id="btn-minimize" class="header-icon-btn" title="${t('minimize')}">
-        <span class="material-symbols-outlined">close_fullscreen</span>
-      </button>
+    ${renderSidebar(rs.view, dir)}
+    <div class="app-main">
+      <div class="header" dir="${dir}">
+        <span class="header-title">${sectionTitle}</span>
+        ${state.activeSession ? `<span class="header-sub">${t('header_running')}</span>` : ''}
+        <button id="btn-minimize" class="header-icon-btn" title="${t('minimize')}">
+          <span class="material-symbols-outlined">close_fullscreen</span>
+        </button>
+      </div>
+      <div class="content" dir="${dir}">
+        ${renderView(state, rs)}
+      </div>
     </div>
-    <div class="content" dir="${dir}">
-      ${renderView(state, rs)}
-    </div>
-    ${renderNavTabs(rs.view)}
     ${rs.showNoteModal ? renderNoteModal() : ''}
     ${rs.editingSessionId ? renderEditSessionModal(state, rs.editingSessionId) : ''}
   `;
@@ -215,25 +225,27 @@ function renderView(state: AppState, rs: RenderState): string {
   }
 }
 
-function renderNavTabs(view: ViewName): string {
+function renderSidebar(view: ViewName, dir: string): string {
   const tabs: Array<{ id: ViewName; icon: string; key: string }> = [
-    { id: 'timer', icon: '<span class="material-symbols-outlined">timer</span>', key: 'nav_timer' },
-    { id: 'report', icon: '<span class="material-symbols-outlined">bar_chart</span>', key: 'nav_report' },
-    { id: 'projects', icon: '<span class="material-symbols-outlined">folder</span>', key: 'nav_projects' },
-    { id: 'settings', icon: '<span class="material-symbols-outlined">settings</span>', key: 'nav_settings' },
+    { id: 'timer', icon: 'timer', key: 'nav_timer' },
+    { id: 'report', icon: 'pie_chart', key: 'nav_report' },
+    { id: 'projects', icon: 'folder', key: 'nav_projects' },
+    { id: 'settings', icon: 'settings', key: 'nav_settings' },
   ];
   return `
-    <nav class="nav-tabs">
-      ${tabs
-        .map(
-          (tab) => `
-        <button class="nav-tab ${view === tab.id ? 'active' : ''}" data-view="${tab.id}">
-          <span class="nav-tab-icon">${tab.icon}</span>
-          <span>${t(tab.key)}</span>
-        </button>
-      `
-        )
-        .join('')}
+    <nav class="sidebar" dir="${dir}">
+      <div class="sidebar-logo">${SIDEBAR_LOGO_SVG}</div>
+      <div class="sidebar-nav">
+        ${tabs
+          .map(
+            (tab) => `
+          <button class="sidebar-nav-btn ${view === tab.id ? 'active' : ''}" data-view="${tab.id}" title="${t(tab.key)}">
+            <span class="material-symbols-outlined">${tab.icon}</span>
+          </button>
+        `
+          )
+          .join('')}
+      </div>
     </nav>
   `;
 }
@@ -252,18 +264,51 @@ function renderTimerView(state: AppState, rs: RenderState): string {
   const canStart = !active && activeProjects.length > 0 && !!selectedProjectId;
   const canStop = !!active;
   const isPaused = !!(active?.idlePaused || active?.manualPaused);
-  const canPause = !!active && !isPaused;
   const canResumePause = !!active?.manualPaused;
 
   const timerText = active ? formatTime(active.duration) : '00:00:00';
   const timerClass = active ? (isPaused ? 'idle' : 'running') : '';
 
-  const phaseColor = getPhaseColor(selectedPhase);
+  // The hero circle mirrors Start when idle, Pause/Resume when a session is
+  // running: one primary action instead of duplicating it in the row below.
+  const heroIcon = !active ? 'play_arrow' : canResumePause ? 'play_arrow' : 'pause';
+  const heroId = !active ? 'btn-start' : canResumePause ? 'btn-resume-pause' : 'btn-pause';
+  const heroDisabled = !active && !canStart;
+
+  const statusClass = !active ? '' : isPaused ? 'paused' : 'running';
+  const statusLabel = !active
+    ? ''
+    : isPaused
+      ? t('status_paused')
+      : t('status_running');
 
   return `
-    <div class="selects-row">
-      <div class="field">
-        <label class="field-label">${t('label_project')}</label>
+    <div class="timer-hero">
+      <button id="${heroId}" class="timer-circle-btn" ${heroDisabled ? 'disabled' : ''}>
+        <span class="material-symbols-outlined">${heroIcon}</span>
+      </button>
+      <div class="timer-hero-info">
+        <div class="timer-display ${timerClass}" id="timer-display">${timerText}</div>
+        ${statusLabel ? `<div class="timer-status ${statusClass}"><span class="status-dot"></span>${statusLabel}</div>` : ''}
+      </div>
+    </div>
+
+    ${
+      active?.idlePaused
+        ? `
+      <div class="idle-banner">
+        <span class="material-symbols-outlined">pause_circle</span>
+        <span class="idle-banner-text">${t('idle_banner')}</span>
+        <button id="btn-resume-idle" class="btn btn-sm btn-secondary"><span class="material-symbols-outlined">play_arrow</span> ${t('btn_resume')}</button>
+      </div>
+    `
+        : ''
+    }
+
+    <div class="field">
+      <label class="field-label">${t('label_project')}</label>
+      <div class="project-field-wrap">
+        <span class="project-field-icon material-symbols-outlined">description</span>
         <select id="project-select" class="select" ${active ? 'disabled' : ''}>
           ${
             activeProjects.length === 0
@@ -283,56 +328,41 @@ function renderTimerView(state: AppState, rs: RenderState): string {
           }
         </select>
       </div>
-      <div class="field">
+    </div>
+
+    <div class="field">
+      <div style="display:flex;align-items:center;justify-content:space-between">
         <label class="field-label">${t('label_phase')}</label>
-        <div class="phase-select-row">
-          <select id="phase-select" class="select" ${active ? 'disabled' : ''}>
-            ${allPhases
-              .map(
-                (ph) => `
-              <option value="${escapeHtml(ph)}" ${ph === selectedPhase ? 'selected' : ''}>${escapeHtml(ph)}</option>
-            `
-              )
-              .join('')}
-          </select>
-          ${
-            !active
-              ? `<button id="btn-toggle-new-phase" class="btn-icon" title="${t('btn_add_phase')}"><span class="material-symbols-outlined">add</span></button>`
-              : ''
-          }
-        </div>
+        ${
+          !active
+            ? `<button id="btn-toggle-new-phase" class="btn-icon" title="${t('btn_add_phase')}"><span class="material-symbols-outlined">add</span></button>`
+            : ''
+        }
+      </div>
+      <div class="phase-pick-row" id="phase-pick-row">
+        ${allPhases
+          .map((ph) => {
+            const color = getPhaseColor(ph);
+            const isSelected = ph === selectedPhase;
+            return `
+          <button
+            class="phase-pick ${isSelected ? 'selected' : ''}"
+            data-phase="${escapeHtml(ph)}"
+            style="${isSelected ? `background:${color}` : ''}"
+            ${active ? 'disabled' : ''}
+          >
+            <span class="phase-dot" style="background:${isSelected ? '#fff' : color}"></span>
+            ${escapeHtml(ph)}
+          </button>
+        `;
+          })
+          .join('')}
       </div>
     </div>
 
     ${rs.showNewPhaseForm && !active ? renderNewPhaseForm(state.customPhases) : ''}
 
-    <div class="timer-block">
-      <div class="timer-display ${timerClass}" id="timer-display">${timerText}</div>
-      <div class="phase-badge">
-        <span class="phase-dot" style="background:${phaseColor}"></span>
-        ${escapeHtml(selectedPhase)}
-      </div>
-    </div>
-
-    ${
-      active?.idlePaused
-        ? `
-      <div class="idle-banner">
-        <span class="material-symbols-outlined">pause_circle</span>
-        <span class="idle-banner-text">${t('idle_banner')}</span>
-        <button id="btn-resume-idle" class="btn btn-sm btn-secondary"><span class="material-symbols-outlined">play_arrow</span> ${t('btn_resume')}</button>
-      </div>
-    `
-        : ''
-    }
-
     <div class="buttons-row">
-      <button id="btn-start" class="btn btn-primary" ${canStart ? '' : 'disabled'}><span class="material-symbols-outlined">play_arrow</span> ${t('btn_start')}</button>
-      ${
-        canResumePause
-          ? `<button id="btn-resume-pause" class="btn btn-secondary"><span class="material-symbols-outlined">play_arrow</span> ${t('btn_resume')}</button>`
-          : `<button id="btn-pause" class="btn btn-secondary" ${canPause ? '' : 'disabled'}><span class="material-symbols-outlined">pause</span> ${t('btn_pause')}</button>`
-      }
       <button id="btn-stop" class="btn btn-danger" ${canStop ? '' : 'disabled'}><span class="material-symbols-outlined">stop</span> ${t('btn_stop')}</button>
     </div>
 
@@ -411,24 +441,29 @@ function renderTodayBreakdown(state: AppState): string {
   }
   const total = breakdown.reduce((a, b) => a + b.duration, 0);
   return `
-    <div class="section-title">${t('today')}</div>
-    ${breakdown
-      .map(
-        (b) => `
-      <div class="phase-bar-row">
-        <div class="phase-bar-label">${escapeHtml(b.phase)}</div>
-        <div class="phase-bar-track">
-          <div class="phase-bar-fill" style="width:${b.pct}%; background:${getPhaseColor(b.phase)}"></div>
-        </div>
-        <div class="phase-bar-duration">${formatDuration(b.duration)}</div>
-        <div class="phase-bar-pct">${Math.round(b.pct)}%</div>
-      </div>
-    `
-      )
-      .join('')}
-    <div class="today-total">
-      <span>${t('total')}</span>
-      <span class="today-total-value">${formatDuration(total)}</span>
+    <div class="section-title-row">
+      <span class="section-title">${t('today')}</span>
+      <span class="section-title-value">${formatDuration(total)}</span>
+    </div>
+    <div class="segmented-bar">
+      ${breakdown
+        .map(
+          (b) =>
+            `<div class="segmented-bar-fill" style="width:${b.pct}%; background:${getPhaseColor(b.phase)}"></div>`
+        )
+        .join('')}
+    </div>
+    <div class="segmented-legend">
+      ${breakdown
+        .map(
+          (b) => `
+        <span class="segmented-legend-item">
+          <span class="phase-dot" style="background:${getPhaseColor(b.phase)}"></span>
+          ${escapeHtml(b.phase)} · ${formatDuration(b.duration)}
+        </span>
+      `
+        )
+        .join('')}
     </div>
   `;
 }
@@ -1030,8 +1065,8 @@ function attachListeners(
     .querySelector<HTMLButtonElement>('#btn-minimize')
     ?.addEventListener('click', cb.onToggleMinimize);
 
-  // Nav tabs
-  app.querySelectorAll<HTMLButtonElement>('.nav-tab').forEach((tab) => {
+  // Sidebar nav
+  app.querySelectorAll<HTMLButtonElement>('.sidebar-nav-btn').forEach((tab) => {
     tab.addEventListener('click', () => {
       const v = tab.getAttribute('data-view') as ViewName | null;
       if (v) cb.onViewChange(v);
@@ -1051,7 +1086,6 @@ function attachListeners(
 
 function attachTimerListeners(app: HTMLElement, rs: RenderState, cb: Callbacks): void {
   const projectSelect = app.querySelector<HTMLSelectElement>('#project-select');
-  const phaseSelect = app.querySelector<HTMLSelectElement>('#phase-select');
   const btnStart = app.querySelector<HTMLButtonElement>('#btn-start');
   const btnStop = app.querySelector<HTMLButtonElement>('#btn-stop');
   const btnPause = app.querySelector<HTMLButtonElement>('#btn-pause');
@@ -1064,11 +1098,12 @@ function attachTimerListeners(app: HTMLElement, rs: RenderState, cb: Callbacks):
       cb.onProjectSelectChange(projectSelect.value)
     );
   }
-  if (phaseSelect) {
-    phaseSelect.addEventListener('change', () =>
-      cb.onPhaseChange(phaseSelect.value as Phase)
-    );
-  }
+  app.querySelectorAll<HTMLButtonElement>('.phase-pick').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const ph = btn.getAttribute('data-phase');
+      if (ph) cb.onPhaseChange(ph as Phase);
+    });
+  });
   if (btnStart) btnStart.addEventListener('click', cb.onStart);
   if (btnStop) btnStop.addEventListener('click', cb.onStop);
   if (btnPause) btnPause.addEventListener('click', cb.onPause);

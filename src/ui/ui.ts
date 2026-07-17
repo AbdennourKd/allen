@@ -9,7 +9,7 @@ import {
   Project,
   ViewName,
 } from './types';
-import { defaultState, loadState, saveState, clearState } from './storage';
+import { defaultState, loadState, parseState, saveState, clearState } from './storage';
 import {
   finalizeSession,
   hasActiveTick,
@@ -297,6 +297,7 @@ const callbacks: Callbacks = {
     stopTick();
     clearIdleTimer();
     clearState();
+    postToSandbox({ type: 'CLEAR_STORAGE' });
     state = defaultState();
     selectedProjectId = '';
     selectedPhase = 'Design';
@@ -555,6 +556,24 @@ function init() {
     if (msg.type === 'INIT') {
       currentFileId = msg.fileId ?? 'local';
       currentFileName = msg.fileName ?? 'Untitled';
+      // clientStorage is the durable source (survives Figma closing this
+      // plugin's iframe to launch another one); localStorage was only a
+      // fast synchronous guess at module load. Adopt it now if present.
+      if (msg.persistedState) {
+        try {
+          Object.assign(state, parseState(msg.persistedState));
+          selectedProjectId =
+            state.activeSession?.projectId ??
+            state.projects.find((p) => !p.archived)?.id ??
+            selectedProjectId;
+          selectedPhase = state.activeSession?.phase ?? selectedPhase;
+          if (state.activeSession && !hasActiveTick()) {
+            startTick(state, onTick);
+          }
+        } catch {
+          // Corrupt clientStorage payload: keep whatever localStorage gave us.
+        }
+      }
       // Auto-select the project last tracked in this file. Only override if
       // no session is running and the mapped project still exists and is
       // not archived. Otherwise keep whatever was already selected.

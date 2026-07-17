@@ -59,7 +59,7 @@ describe('formatDuration', () => {
 
 describe('getPhaseColor', () => {
   it('returns the built-in color for default phases', () => {
-    expect(getPhaseColor('Design')).toBe('#0D99FF');
+    expect(getPhaseColor('Design')).toBe('#8B7CF6');
   });
 
   it('is deterministic for the same custom phase name', () => {

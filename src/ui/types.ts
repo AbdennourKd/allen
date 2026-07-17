@@ -16,23 +16,23 @@ export const PHASES: Phase[] = [
 ];
 
 export const PHASE_COLORS: Record<string, string> = {
-  Research: '#7B61FF',
-  Ideation: '#FF6B6B',
-  Wireframe: '#FFB347',
+  Research: '#4C8DFF',
+  Ideation: '#FF8A65',
+  Wireframe: '#F5A623',
   Prototype: '#4ECDC4',
-  Design: '#0D99FF',
-  Review: '#A8E063',
-  Handoff: '#C9A0DC',
+  Design: '#8B7CF6',
+  Review: '#F5A623',
+  Handoff: '#22C55E',
 };
 
 export const PROJECT_PALETTE: string[] = [
-  '#FF6B6B',
-  '#FFB347',
+  '#4C8DFF',
+  '#8B7CF6',
+  '#F5A623',
+  '#22C55E',
+  '#FF8A65',
   '#4ECDC4',
-  '#0D99FF',
-  '#A8E063',
-  '#C9A0DC',
-  '#7B61FF',
+  '#EC6FBB',
   '#F7DC6F',
 ];
 
