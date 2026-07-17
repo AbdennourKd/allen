@@ -97,7 +97,7 @@ Features:
 - Project archiving, color tagging, optional notes per session
 - Works on shared files: each session records who tracked it
 
-No account, no cloud sync, no telemetry. Everything stays in your browser's localStorage.
+No account, no cloud sync, no telemetry. Everything stays on your device, stored locally by Figma.
 
 How it works: create a project, pick a phase, hit start. The timer pauses itself if you walk away, or you can pause it yourself. Stop, optionally add a note. Open Report to see the breakdown for any period, export to CSV or PDF.
 
