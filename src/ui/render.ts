@@ -138,29 +138,23 @@ export function updateTimerDisplay(state: AppState): void {
 // HTML BUILDERS
 // ================================================================
 
-// Allen logo (marketing/LOGO_ALLEN.png), inlined as base64 so it ships inside the single-file UI bundle.
-const SIDEBAR_LOGO_SRC = 'data:image/png;base64,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';
-
 function buildHTML(state: AppState, rs: RenderState): string {
   const dir = isRTL() ? 'rtl' : 'ltr';
   if (rs.isMinimized) {
     return renderMiniBar(state, dir);
   }
-  const sectionTitle = rs.view === 'timer' ? t('session_title') : t(`nav_${rs.view}`);
   return `
-    ${renderSidebar(rs.view, dir)}
-    <div class="app-main">
-      <div class="header" dir="${dir}">
-        <span class="header-title">${sectionTitle}</span>
-        ${state.activeSession ? `<span class="header-sub">${t('header_running')}</span>` : ''}
-        <button id="btn-minimize" class="header-icon-btn" title="${t('minimize')}">
-          <span class="material-symbols-outlined">close_fullscreen</span>
-        </button>
-      </div>
-      <div class="content" dir="${dir}">
-        ${renderView(state, rs)}
-      </div>
+    <div class="header" dir="${dir}">
+      <span class="header-title">${t('header_title')}</span>
+      ${state.activeSession ? `<span class="header-sub">${t('header_running')}</span>` : ''}
+      <button id="btn-minimize" class="header-icon-btn" title="${t('minimize')}">
+        <span class="material-symbols-outlined">close_fullscreen</span>
+      </button>
     </div>
+    <div class="content" dir="${dir}">
+      ${renderView(state, rs)}
+    </div>
+    ${renderNavTabs(rs.view)}
     ${rs.showNoteModal ? renderNoteModal() : ''}
     ${rs.editingSessionId ? renderEditSessionModal(state, rs.editingSessionId) : ''}
   `;
@@ -221,29 +215,25 @@ function renderView(state: AppState, rs: RenderState): string {
   }
 }
 
-function renderSidebar(view: ViewName, dir: string): string {
+function renderNavTabs(view: ViewName): string {
   const tabs: Array<{ id: ViewName; icon: string; key: string }> = [
-    { id: 'timer', icon: 'timer', key: 'nav_timer' },
-    { id: 'report', icon: 'pie_chart', key: 'nav_report' },
-    { id: 'projects', icon: 'folder', key: 'nav_projects' },
-    { id: 'settings', icon: 'settings', key: 'nav_settings' },
+    { id: 'timer', icon: '<span class="material-symbols-outlined">timer</span>', key: 'nav_timer' },
+    { id: 'report', icon: '<span class="material-symbols-outlined">pie_chart</span>', key: 'nav_report' },
+    { id: 'projects', icon: '<span class="material-symbols-outlined">folder</span>', key: 'nav_projects' },
+    { id: 'settings', icon: '<span class="material-symbols-outlined">settings</span>', key: 'nav_settings' },
   ];
   return `
-    <nav class="sidebar" dir="${dir}">
-      <div class="sidebar-logo"><img src="${SIDEBAR_LOGO_SRC}" alt="Allen" /></div>
-      <div class="sidebar-nav">
-        ${tabs
-          .map((tab) => {
-            const isActive = view === tab.id;
-            return `
-          <button class="sidebar-nav-btn ${isActive ? 'active' : ''}" data-view="${tab.id}" title="${t(tab.key)}">
-            <span class="material-symbols-outlined">${tab.icon}</span>
-            ${isActive ? `<span class="sidebar-nav-label">${t(tab.key)}</span>` : ''}
-          </button>
-        `;
-          })
-          .join('')}
-      </div>
+    <nav class="nav-tabs">
+      ${tabs
+        .map(
+          (tab) => `
+        <button class="nav-tab ${view === tab.id ? 'active' : ''}" data-view="${tab.id}">
+          <span class="nav-tab-icon">${tab.icon}</span>
+          <span>${t(tab.key)}</span>
+        </button>
+      `
+        )
+        .join('')}
     </nav>
   `;
 }
@@ -329,35 +319,22 @@ function renderTimerView(state: AppState, rs: RenderState): string {
     </div>
 
     <div class="field">
-      <div style="display:flex;align-items:center;justify-content:space-between">
-        <label class="field-label">${t('label_phase')}</label>
+      <label class="field-label">${t('label_phase')}</label>
+      <div class="phase-select-row">
+        <select id="phase-select" class="select" ${active ? 'disabled' : ''}>
+          ${allPhases
+            .map(
+              (ph) => `
+            <option value="${escapeHtml(ph)}" ${ph === selectedPhase ? 'selected' : ''}>${escapeHtml(ph)}</option>
+          `
+            )
+            .join('')}
+        </select>
         ${
           !active
             ? `<button id="btn-toggle-new-phase" class="btn-icon" title="${t('btn_add_phase')}"><span class="material-symbols-outlined">add</span></button>`
             : ''
         }
-      </div>
-      <div class="phase-pick-row" id="phase-pick-row">
-        ${allPhases
-          .map((ph) => {
-            const color = getPhaseColor(ph);
-            const isSelected = ph === selectedPhase;
-            const style = isSelected
-              ? `background:${color}`
-              : `background:${color}26; color:${color}`;
-            return `
-          <button
-            class="phase-pick ${isSelected ? 'selected' : ''}"
-            data-phase="${escapeHtml(ph)}"
-            style="${style}"
-            ${active ? 'disabled' : ''}
-          >
-            <span class="phase-dot" style="background:${isSelected ? '#fff' : color}"></span>
-            ${escapeHtml(ph)}
-          </button>
-        `;
-          })
-          .join('')}
       </div>
     </div>
 
@@ -1066,8 +1043,8 @@ function attachListeners(
     .querySelector<HTMLButtonElement>('#btn-minimize')
     ?.addEventListener('click', cb.onToggleMinimize);
 
-  // Sidebar nav
-  app.querySelectorAll<HTMLButtonElement>('.sidebar-nav-btn').forEach((tab) => {
+  // Nav tabs
+  app.querySelectorAll<HTMLButtonElement>('.nav-tab').forEach((tab) => {
     tab.addEventListener('click', () => {
       const v = tab.getAttribute('data-view') as ViewName | null;
       if (v) cb.onViewChange(v);
@@ -1087,6 +1064,7 @@ function attachListeners(
 
 function attachTimerListeners(app: HTMLElement, rs: RenderState, cb: Callbacks): void {
   const projectSelect = app.querySelector<HTMLSelectElement>('#project-select');
+  const phaseSelect = app.querySelector<HTMLSelectElement>('#phase-select');
   const btnStart = app.querySelector<HTMLButtonElement>('#btn-start');
   const btnStop = app.querySelector<HTMLButtonElement>('#btn-stop');
   const btnPause = app.querySelector<HTMLButtonElement>('#btn-pause');
@@ -1099,12 +1077,11 @@ function attachTimerListeners(app: HTMLElement, rs: RenderState, cb: Callbacks):
       cb.onProjectSelectChange(projectSelect.value)
     );
   }
-  app.querySelectorAll<HTMLButtonElement>('.phase-pick').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const ph = btn.getAttribute('data-phase');
-      if (ph) cb.onPhaseChange(ph as Phase);
-    });
-  });
+  if (phaseSelect) {
+    phaseSelect.addEventListener('change', () =>
+      cb.onPhaseChange(phaseSelect.value as Phase)
+    );
+  }
   if (btnStart) btnStart.addEventListener('click', cb.onStart);
   if (btnStop) btnStop.addEventListener('click', cb.onStop);
   if (btnPause) btnPause.addEventListener('click', cb.onPause);
