@@ -4,7 +4,7 @@
 // one, but clientStorage is (it's Figma's own durable per-plugin storage).
 
 const FULL_W = 420;
-const FULL_H = 720;
+const FULL_H = 640;
 const MINI_W = 220;
 const MINI_H = 64;
 const CLIENT_STORAGE_KEY = 'ux_tracker_state';
