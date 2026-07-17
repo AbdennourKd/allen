@@ -1,10 +1,11 @@
 {
   "name": "Allen: UX Time Tracking",
-  "id": "allen-ux-time-tracking",
+  "id": "1659939142174952153",
   "api": "1.0.0",
   "main": "dist/code.js",
   "ui": "dist/ui.html",
   "editorType": ["figma"],
+  "documentAccess": "dynamic-page",
   "networkAccess": {
     "allowedDomains": [
       "https://cdnjs.cloudflare.com",
