@@ -141,7 +141,7 @@ export function updateTimerDisplay(state: AppState): void {
 function buildHTML(state: AppState, rs: RenderState): string {
   const dir = isRTL() ? 'rtl' : 'ltr';
   if (rs.isMinimized) {
-    return renderMiniBar(state, dir);
+    return renderMiniBar(state, rs, dir);
   }
   return `
     <div class="header" dir="${dir}">
@@ -160,7 +160,7 @@ function buildHTML(state: AppState, rs: RenderState): string {
   `;
 }
 
-function renderMiniBar(state: AppState, dir: string): string {
+function renderMiniBar(state: AppState, rs: RenderState, dir: string): string {
   const session = state.activeSession;
   if (session) {
     const phaseColor = getPhaseColor(session.phase);
@@ -190,9 +190,14 @@ function renderMiniBar(state: AppState, dir: string): string {
       </div>
     `;
   }
+  const activeProjects = state.projects.filter((p) => !p.archived);
+  const canStart = activeProjects.length > 0 && !!rs.selectedProjectId;
   return `
     <div class="mini-bar idle-empty" dir="${dir}">
       <span class="mini-title">${t('header_title')}</span>
+      <button id="btn-start" class="mini-action" title="${t('btn_start')}" ${canStart ? '' : 'disabled'}>
+        <span class="material-symbols-outlined">play_arrow</span>
+      </button>
       <button id="btn-expand" class="mini-action" title="${t('expand')}">
         <span class="material-symbols-outlined">open_in_full</span>
       </button>
@@ -1026,6 +1031,9 @@ function attachListeners(
     app
       .querySelector<HTMLButtonElement>('#btn-expand')
       ?.addEventListener('click', cb.onToggleMinimize);
+    app
+      .querySelector<HTMLButtonElement>('#btn-start')
+      ?.addEventListener('click', cb.onStart);
     app
       .querySelector<HTMLButtonElement>('#btn-stop')
       ?.addEventListener('click', cb.onStop);

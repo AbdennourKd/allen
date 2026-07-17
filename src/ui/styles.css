@@ -169,9 +169,14 @@ input, select, textarea {
   -webkit-app-region: no-drag;
 }
 
-.mini-action:hover {
+.mini-action:hover:not(:disabled) {
   color: var(--text-primary);
   background: var(--surface-hover);
+}
+
+.mini-action:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
 .mini-action.mini-stop:hover {
