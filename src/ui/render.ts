@@ -899,7 +899,7 @@ function renderSettingsView(state: AppState, rs: RenderState): string {
       </div>
       <div class="field">
         <label class="field-label">${t('idle_timeout')}</label>
-        <select id="idle-select" class="select">
+        <select id="idle-select" class="select" dir="ltr">
           ${idleOptions
             .map(
               (o) =>
@@ -910,7 +910,7 @@ function renderSettingsView(state: AppState, rs: RenderState): string {
       </div>
       <div class="field">
         <label class="field-label">${t('work_day')}</label>
-        <select id="workday-select" class="select">
+        <select id="workday-select" class="select" dir="ltr">
           ${hoursOptions
             .map(
               (h) =>
@@ -923,8 +923,8 @@ function renderSettingsView(state: AppState, rs: RenderState): string {
 
     <div class="section-title">${t('about')}</div>
     <div class="empty-state" style="text-align:left;padding:12px;font-size:11px">
-      <div><strong>${state.projects.length}</strong> ${t('projects_count')}</div>
-      <div><strong>${state.sessions.length}</strong> ${t('sessions_recorded')}</div>
+      <div><strong>${state.projects.length}</strong> ${state.projects.length === 1 ? t('project_singular') : t('projects_count')}</div>
+      <div><strong>${state.sessions.length}</strong> ${state.sessions.length === 1 ? t('sessions_recorded_singular') : t('sessions_recorded')}</div>
     </div>
 
     <div class="danger-zone">
