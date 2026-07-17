@@ -137,7 +137,7 @@ Recommandation :
 
 ## Checklist finale avant submit
 
-- [ ] Icône 128×128 testée sur fond blanc ET noir
+- [x] Icône 128×128 testée sur fond blanc ET noir (112px et 32px, lisible dans les deux cas)
 - [x] Cover 1920×960 (`marketing/Banner.png`)
 - [x] 4 screenshots (`marketing/Visuel 1-4.png`)
 - [x] Tagline < 80 caractères
