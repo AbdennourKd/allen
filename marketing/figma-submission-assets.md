@@ -144,6 +144,6 @@ Recommandation :
 - [ ] Description sans typo, sans placeholder
 - [ ] Email de support valide dans le formulaire
 - [x] Plugin testé une dernière fois en local : démarrer, pause/reprendre, stopper, export CSV/PDF (contenu vérifié), switch langue — RAS, aucune erreur console
-- [ ] manifest.json a la version finale (vérifier le `name` et le `reasoning` du networkAccess)
+- [x] manifest.json vérifié — `name`/`id`/`api` OK ; `reasoning` du networkAccess corrigé (mentionnait encore localStorage seul, plus exact depuis le fix clientStorage)
 
 Une fois tout coché : Figma Desktop, Plugins, Manage plugins, Allen, Publish.
