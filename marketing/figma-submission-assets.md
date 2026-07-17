@@ -142,7 +142,7 @@ Recommandation :
 - [x] 4 screenshots (`marketing/Visuel 1-4.png`)
 - [x] Tagline < 80 caractères
 - [x] Description sans typo, sans placeholder (corrigé : mentionnait encore localStorage seul)
-- [ ] Email de support valide dans le formulaire
+- [x] Email de support valide dans le formulaire (abdennourkd2001@gmail.com, cohérent partout, confirmé actif)
 - [x] Plugin testé une dernière fois en local : démarrer, pause/reprendre, stopper, export CSV/PDF (contenu vérifié), switch langue — RAS, aucune erreur console
 - [x] manifest.json vérifié — `name`/`id`/`api` OK ; `reasoning` du networkAccess corrigé (mentionnait encore localStorage seul, plus exact depuis le fix clientStorage)
 
