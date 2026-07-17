@@ -14,7 +14,9 @@ Tout ce qu'il faut préparer dans Figma avant de cliquer "Publish".
 
 ---
 
-## 2. Cover image, 1920 × 960 px (PNG)
+## 2. Cover image, 1920 × 960 px (PNG). FAIT
+
+`marketing/Banner_2.png` (version finale validée) : logo + "Allen" + "Track your UX time. By phase. Without leaving Figma." / "Free. No signup. Custom phases, flexible reports, EN / FR / AR." à gauche, mockup réel du Timer à droite, dégradé violet-indigo (#4D45FC → #6D5DF5 → #4C8DFF). `Banner.png` est une version antérieure abandonnée (texte générique, bouton "Start timer" inventé qui n'existe pas dans le vrai produit).
 
 **Ce que c'est :**
 La grande image qui s'affiche en haut de la page Community. C'est le truc qui te fait scroller ou pas.
@@ -36,7 +38,9 @@ La grande image qui s'affiche en haut de la page Community. C'est le truc qui te
 
 ---
 
-## 3. Screenshots, 3 à 5 (1920 × 1080 ou 1280 × 720, PNG)
+## 3. Screenshots, 3 à 5 (1920 × 1080 ou 1280 × 720, PNG). FAIT
+
+`marketing/Visuel 1.png` à `Visuel 4.png` : timer en action, phases personnalisées, rapports flexibles, sélecteur de langue. Fenêtre flottante sur fond dégradé violet-indigo, captures réelles non retouchées (juste recadrage de la barre de titre Figma).
 
 Chaque screenshot doit raconter UN bénéfice. L'utilisateur va swiper, donc clarté > exhaustivité. **Le premier screenshot compte double** : c'est souvent lui qui sert de vignette dans les résultats de recherche, avant même que quelqu'un clique sur la fiche.
 
@@ -66,14 +70,11 @@ Chaque screenshot doit raconter UN bénéfice. L'utilisateur va swiper, donc cla
 
 ---
 
-## 4. Tagline, 1 ligne (max 80 caractères)
+## 4. Tagline, 1 ligne (max 80 caractères). FAIT
 
-**Options :**
-1. "Track your UX time, phase by phase. Without leaving Figma." (66 c)
-2. "Time tracker for UX designers. Phases, reports, multi-language." (64 c)
-3. "Honest UX time tracking. No signup. No cloud. Yours forever." (60 c)
+**Choisie :** "Track your UX time, phase by phase. Without leaving Figma." (66 c)
 
-Recommandation : option 1, la plus accrocheuse.
+Cohérente avec l'accroche du cover ("Track your UX time. By phase.").
 
 ---
 
@@ -137,9 +138,9 @@ Recommandation :
 ## Checklist finale avant submit
 
 - [ ] Icône 128×128 testée sur fond blanc ET noir
-- [ ] Cover 1920×960 lisible en thumbnail (zoom out à 25% pour vérifier)
-- [ ] 3-5 screenshots avec données *réalistes* (pas de Lorem, pas de "Project 1")
-- [ ] Tagline < 80 caractères
+- [x] Cover 1920×960 (`marketing/Banner.png`)
+- [x] 4 screenshots (`marketing/Visuel 1-4.png`)
+- [x] Tagline < 80 caractères
 - [ ] Description sans typo, sans placeholder
 - [ ] Email de support valide dans le formulaire
 - [ ] Plugin testé une dernière fois en local : démarrer, stopper, exporter, switch langue
