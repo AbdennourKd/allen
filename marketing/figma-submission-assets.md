@@ -143,7 +143,7 @@ Recommandation :
 - [x] Tagline < 80 caractères
 - [ ] Description sans typo, sans placeholder
 - [ ] Email de support valide dans le formulaire
-- [ ] Plugin testé une dernière fois en local : démarrer, stopper, exporter, switch langue
+- [x] Plugin testé une dernière fois en local : démarrer, pause/reprendre, stopper, export CSV/PDF (contenu vérifié), switch langue — RAS, aucune erreur console
 - [ ] manifest.json a la version finale (vérifier le `name` et le `reasoning` du networkAccess)
 
 Une fois tout coché : Figma Desktop, Plugins, Manage plugins, Allen, Publish.
