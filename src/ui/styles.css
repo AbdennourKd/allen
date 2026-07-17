@@ -646,7 +646,7 @@ input, select, textarea {
   height: 10px;
   border-radius: 6px;
   overflow: hidden;
-  background: var(--surface-2);
+  background: var(--border);
   gap: 2px;
 }
 
@@ -700,7 +700,7 @@ input, select, textarea {
 .phase-bar-track {
   height: 6px;
   border-radius: 3px;
-  background: var(--surface-2);
+  background: var(--border);
   overflow: hidden;
 }
 
@@ -711,14 +711,15 @@ input, select, textarea {
 }
 
 .phase-bar-duration {
-  color: var(--text-secondary);
+  color: var(--text-primary);
+  font-weight: 600;
   text-align: right;
   font-variant-numeric: tabular-nums;
   font-size: 11px;
 }
 
 .phase-bar-pct {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   text-align: right;
   font-size: 11px;
   font-variant-numeric: tabular-nums;
@@ -742,7 +743,7 @@ input, select, textarea {
 .day-bar-track {
   height: 6px;
   border-radius: 3px;
-  background: var(--surface-2);
+  background: var(--border);
   overflow: hidden;
 }
 
@@ -754,7 +755,8 @@ input, select, textarea {
 }
 
 .day-bar-duration {
-  color: var(--text-secondary);
+  color: var(--text-primary);
+  font-weight: 600;
   text-align: right;
   font-size: 11px;
   font-variant-numeric: tabular-nums;
@@ -776,7 +778,7 @@ input, select, textarea {
 .day-goal-track {
   height: 6px;
   border-radius: 3px;
-  background: var(--surface-2);
+  background: var(--border);
   overflow: hidden;
 }
 

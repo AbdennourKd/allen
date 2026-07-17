@@ -21,7 +21,7 @@ export const PHASE_COLORS: Record<string, string> = {
   Wireframe: '#F5A623',
   Prototype: '#4ECDC4',
   Design: '#8B7CF6',
-  Review: '#F5A623',
+  Review: '#EC6FBB',
   Handoff: '#22C55E',
 };
 

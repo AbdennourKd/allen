@@ -537,7 +537,7 @@ function renderProjectBreakdown(state: AppState, sessions: Session[]): string {
     <div class="section-title">${t('by_project')}</div>
     ${grouped
       .map((g) => {
-        const pct = (g.duration / max) * 100;
+        const pct = max > 0 ? (g.duration / max) * 100 : 0;
         return `
       <div class="phase-bar-row">
         <div class="phase-bar-label">${escapeHtml(g.name)}</div>
@@ -591,7 +591,7 @@ function renderSubBreakdown(sessions: Session[], granularity: Granularity): stri
       <div class="section-title">${t('by_month')}</div>
       ${grouped
         .map((g) => {
-          const pct = (g.duration / max) * 100;
+          const pct = max > 0 ? (g.duration / max) * 100 : 0;
           return `
         <div class="day-bar-row">
           <div class="day-bar-label">${g.label}</div>
@@ -618,8 +618,8 @@ function renderPhaseBreakdown(sessions: Session[]): string {
     <div class="section-title">${t('by_phase')}</div>
     ${grouped
       .map((g) => {
-        const pctOfMax = (g.duration / max) * 100;
-        const pctOfTotal = Math.round((g.duration / total) * 100);
+        const pctOfMax = max > 0 ? (g.duration / max) * 100 : 0;
+        const pctOfTotal = total > 0 ? Math.round((g.duration / total) * 100) : 0;
         return `
       <div class="phase-bar-row">
         <div class="phase-bar-label">${escapeHtml(g.phase)}</div>
@@ -644,7 +644,7 @@ function renderDayBreakdown(
     <div class="section-title">${t('by_day')}</div>
     ${grouped
       .map((g) => {
-        const pct = (g.duration / max) * 100;
+        const pct = max > 0 ? (g.duration / max) * 100 : 0;
         return `
       <div class="day-bar-row">
         <div class="day-bar-label">${g.label}</div>
